@@ -104,4 +104,4 @@ run_audit.py      CLI
 
 The hook is `CustomKnapsackSolver`, a documented extension point — no fork
 required. `AuditingSolver` records, audits, then delegates to `dp_knapsack` so
-compilation proceeds normally.
+
