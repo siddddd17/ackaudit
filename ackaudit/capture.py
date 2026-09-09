@@ -96,16 +96,32 @@ MODELS: dict[str, ModelSpec] = {
 }
 
 
+def _resolve(name: str, scale: int = 1) -> ModelSpec:
+    if name in MODELS:
+        return MODELS[name]
+    from .hf_models import hf_models
+
+    zoo = hf_models(scale=scale)
+    if name in zoo:
+        return zoo[name]
+    raise KeyError(f"unknown model {name!r}")
+
+
+def all_model_names(scale: int = 1) -> list[str]:
+    from .hf_models import hf_models
+
+    return list(MODELS) + list(hf_models(scale=scale))
+
+
 def capture(
     name: str,
     outdir: str | Path,
     budget: float = 0.5,
     budgets: Optional[list[float]] = None,
     solvers: Optional[list[str]] = None,
+    scale: int = 1,
 ) -> AuditingSolver:
-    if name not in MODELS:
-        raise KeyError(f"unknown model {name!r}; have {sorted(MODELS)}")
-    build, make_inputs = MODELS[name]
+    build, make_inputs = _resolve(name, scale=scale)
 
     auditor = AuditingSolver(
         outdir=Path(outdir) / name, label=name, budgets=budgets, solvers=solvers
@@ -138,11 +154,12 @@ def capture_all(
     names: Optional[list[str]] = None,
     budget: float = 0.5,
     budgets: Optional[list[float]] = None,
+    scale: int = 1,
 ) -> dict[str, AuditingSolver]:
     out: dict[str, AuditingSolver] = {}
     for name in names or list(MODELS):
         try:
-            out[name] = capture(name, outdir, budget=budget, budgets=budgets)
+            out[name] = capture(name, outdir, budget=budget, budgets=budgets, scale=scale)
             log.info("captured %s", name)
         except Exception:
             log.exception("capture failed for %s", name)
