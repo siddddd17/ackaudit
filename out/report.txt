@@ -11,21 +11,21 @@ Q1  INPUT SCALE ON REAL CAPTURED GRAPHS
 
 Q2  PROXY ERROR  (true peak vs. the objective the solver optimises)
   measurements         : 160
-  median understatement: +33.3%
-  mean                 : +213.6%
+  median understatement: +31.6%
+  mean                 : +212.3%
   p90                  : +733.3%
   max                  : +2500.0%
   fraction over 10%    : 61%
 
 Q3  DOES EXACTNESS SURVIVE?
   (graph, budget) cells: 40
-  cells where the proxy-best solver is NOT the true-best: 24 (60%)
+  cells where the proxy-best solver is NOT the true-best: 22 (55%)
   max true-peak spread among plans TIED at the proxy optimum: 84.6%
   reference: greedy's reported proxy-objective gap is ~7.4%
 
 SOLVER COST
   solver                     median s      max s    peak MB   failed
-  dp                           0.0282     0.0569       0.01        0
-  dp_sliding_hirschberg        0.0547     0.1290       0.01        0
+  dp                           0.0265     0.0452       0.01        0
+  dp_sliding_hirschberg        0.0527     0.1232       0.01        0
   greedy                       0.0000     0.0001       0.00        0
-  ilp                          0.0047     1.8372      17.87        0
+  ilp                          0.0044     1.8132      17.87        0

@@ -7,6 +7,7 @@ dependencies = ["torch>=2.10", "networkx", "scipy", "matplotlib"]
 
 [project.optional-dependencies]
 dev = ["pytest", "ruff"]
+hf = ["transformers"]
 
 [build-system]
 requires = ["setuptools>=64"]
