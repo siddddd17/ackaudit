@@ -1,0 +1,31 @@
+====================================================================
+ACTIVATION-CHECKPOINTING KNAPSACK AUDIT
+====================================================================
+
+Q1  INPUT SCALE ON REAL CAPTURED GRAPHS
+  graphs captured      : 4
+  n items              : 11 - 31
+  quantised capacity W : 5000 - 5000
+  W structural ceiling : 10000  (S=10000, budget<=1)
+  largest dp table     : 0.640 MB
+
+Q2  PROXY ERROR  (true peak vs. the objective the solver optimises)
+  measurements         : 160
+  median understatement: +31.6%
+  mean                 : +210.2%
+  p90                  : +733.3%
+  max                  : +2500.0%
+  fraction over 10%    : 59%
+
+Q3  DOES EXACTNESS SURVIVE?
+  (graph, budget) cells: 40
+  cells where the proxy-best solver is NOT the true-best: 19 (48%)
+  max true-peak spread among plans TIED at the proxy optimum: 84.6%
+  reference: greedy's reported proxy-objective gap is ~7.4%
+
+SOLVER COST
+  solver                     median s      max s    peak MB   failed
+  dp                           0.0277     0.0495       0.01        0
+  dp_sliding_hirschberg        0.0534     0.1232       0.01        0
+  greedy                       0.0000     0.0001       0.00        0
+  ilp                          0.0046     5.5011      21.59        0
