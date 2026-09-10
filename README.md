@@ -11,8 +11,9 @@ Once the harness computes item runtimes correctly, ties between solvers
 disappear entirely and the gap between the objective and the simulated peak is
 around 10%.
 
-Two bugs turned up along the way. One is upstream in PyTorch and is filed. One
-was ours, and it was producing the finding.
+Two bugs turned up along the way. One is upstream in PyTorch, filed as
+[pytorch/pytorch#196512](https://github.com/pytorch/pytorch/issues/196512). The
+other was in this harness, and it was producing the finding.
 
 ---
 
@@ -68,8 +69,7 @@ python scripts/update_readme.py
 
 Runs re-exec themselves with `PYTHONHASHSEED=0` and pin the simulated backward
 schedule (`--schedule default|lexicographic|fx_order`, default `fx_order`). Both
-are necessary for reproducibility; see [Bugs found](#bugs-found). Two identical
-runs give 0/160 differing results.
+are necessary for reproducibility; see [Bugs found](#bugs-found).
 
 ## Results
 
@@ -125,18 +125,7 @@ On real transformers the solvers never all agree on the same proxy optimum, and
 where partial ties occur they carry no spread in true peak. The objective
 distinguishes between plans.
 
-The reason is visible in the degeneracy table. Item heterogeneity is what
-matters, and real models have it:
-
-```
-  graph        n  distinct mem  distinct rt  distinct pairs
-  bert#0      48             8            4              10
-  llama#0     40             6            4               7
-  branching#0 31             1            1               1
-  deep_mlp#0  24             1            1               1
-```
-
-The synthetic graphs have uniform items by construction, which is exactly what
+The reason is in the heterogeneity table above. The synthetic graphs have uniform items by construction, which is exactly what
 produces ties. That is a property of models this repo defines, not of anything
 in the wild.
 
@@ -158,23 +147,21 @@ be live at once. The proxy counts only bytes saved, so it cannot see this.
 tail.
 
 
-The dashed line is the objective every solver optimises; it tracks the budget as
-intended. The solid lines are the simulated peaks. For `greedy`, `dp` and
-`hirschberg`, which coincide exactly, the real peak sits near 0.52 no matter what
-budget is requested. Tightening the budget from 0.5 to 0.05 changes the score by
-an order of magnitude and the simulated memory not at all.
+The budget barely bites here. Across budgets from 0.5 down to 0.05 the objective
+falls by an order of magnitude while the simulated peak for `greedy`, `dp` and
+`hirschberg` stays near 0.52.
 
 The caveat: this graph is 24 identical layers because that is how it was written.
 The effect is real and reproduces exactly across machines, but it demonstrates
 what *can* happen under perfect degeneracy, not what does happen in practice.
 
-### Input scale
+### Against the published benchmark
 
 The COLM 2026 paper introducing `dp_knapsack_sliding_hirschberg` benchmarks at
 `W` between 1.4e8 and 3.8e8 and reports `dp_knapsack` running out of memory at
 n = 100 on 64 GB, four to five orders of magnitude above what this pipeline
 produces. At realistic scale the new solver is 2 to 3x *slower* than
-`dp_knapsack` at realistic scale, not 25 to 28% faster; see the solver table above.
+`dp_knapsack`, not 25 to 28% faster; see the solver table above.
 
 
 ## Bugs found
@@ -186,7 +173,7 @@ insertion order; insertion order comes from a Python set of node names, so it
 varies with the hash seed. Identical graph hash, three different peaks across
 eight processes.
 [pytorch/pytorch#196512](https://github.com/pytorch/pytorch/issues/196512).
-Writeup and the second, unfiled issue: `docs/UPSTREAM_BUG.md`.
+Writeup and the second, unfiled issue: `docs/UPSTREAM_BUG.md`. See `docs/UPSTREAM_BUG.md`.
 
 A second, deeper question is described there but not yet filed: peak memory is
 schedule-dependent, and the evaluator picks a schedule it never defines. On the
@@ -194,7 +181,7 @@ same graph and saved-node set, `nx.topological_sort` gave 0.8387 and
 `lexicographical_topological_sort` gave 0.3548. Both are valid orders. Settling
 that needs a comparison against a measured backward pass.
 
-**Ours, fixed.** `_runtimes_for` called `estimate_runtime` from inside the solver,
+**In this harness, fixed.** `_runtimes_for` called `estimate_runtime` from inside the solver,
 which runs under `no_dispatch()`, so flops mode executed ops on real tensors
 instead of fake ones. This crashed BERT on embedding lookups and returned
 near-uniform runtimes everywhere else. Uniform item values are what made every
@@ -202,7 +189,7 @@ solver tie. `RuntimeRecorder` now captures the values the partitioner computes
 outside that block. Llama went from 1 distinct runtime value to 4, and all-tied
 cells went from 80% to 0%.
 
-That second bug produced the original finding. It is documented here rather than
+That harness bug produced the original finding. It is documented here rather than
 quietly corrected, because the corrected numbers are the point.
 
 ## Open issues
@@ -233,13 +220,13 @@ ackaudit/
 ├── schedule.py    pins the simulated backward schedule (A/B/C)
 ├── figures.py     the one README figure
 ├── _hashseed.py   re-exec with PYTHONHASHSEED=0
-├── analyze.py     summary statistics, heterogeneity and tie-set diagnostics
-└── plots.py       figures
+└── analyze.py     summary statistics, heterogeneity and tie-set diagnostics
 scripts/
 ├── run_audit.py     synthetic sweep
 ├── run_hf.py        real-architecture sweep + degeneracy check
 ├── update_readme.py regenerates the Results section and figure from out/
 └── inspect_cell.py  dump tied plans for one (graph, budget) cell
 docs/
-└── UPSTREAM_BUG.md  writeup of both upstream issues
+├── UPSTREAM_BUG.md  writeup of both upstream issues
+└── figures/         regenerated by update_readme.py
 ```
