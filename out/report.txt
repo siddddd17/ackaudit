@@ -19,18 +19,12 @@ Q2  PROXY ERROR  (true peak vs. the objective the solver optimises)
   max                  : +1100.0%
   fraction over 10%    : 52%
 
-Q3  DOES EXACTNESS SURVIVE?
-  (graph, budget) cells: 40
-  cells where the proxy-best solver is NOT the true-best: 22 (55%)
-  max true-peak spread among plans TIED at the proxy optimum: 84.6%
-  reference: greedy's reported proxy-objective gap is ~7.4%
-
 SOLVER COST
   solver                     median s      max s    peak MB   failed
-  dp                           0.0268     0.0436       0.01        0
-  dp_sliding_hirschberg        0.0515     0.1203       0.01        0
+  dp                           0.0268     0.0450       0.01        0
+  dp_sliding_hirschberg        0.0536     0.1239       0.01        0
   greedy                       0.0000     0.0001       0.00        0
-  ilp                          0.0045     1.7739      17.86        0
+  ilp                          0.0046     1.7990      17.86        0
 
 ========================================================================
 DEGENERACY CHECK
