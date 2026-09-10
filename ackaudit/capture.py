@@ -10,7 +10,8 @@ import torch
 import torch._functorch.config as functorch_config
 import torch.nn as nn
 
-from .audit import AuditingSolver
+from .audit import AuditingSolver, RuntimeRecorder
+from .schedule import DEFAULT_SCHEDULE
 
 log = logging.getLogger(__name__)
 
@@ -120,11 +121,14 @@ def capture(
     budgets: Optional[list[float]] = None,
     solvers: Optional[list[str]] = None,
     scale: int = 1,
+    schedule: str = DEFAULT_SCHEDULE,
 ) -> AuditingSolver:
     build, make_inputs = _resolve(name, scale=scale)
 
+    recorder = RuntimeRecorder()
     auditor = AuditingSolver(
-        outdir=Path(outdir) / name, label=name, budgets=budgets, solvers=solvers
+        outdir=Path(outdir) / name, label=name, budgets=budgets, solvers=solvers,
+        recorder=recorder, schedule=schedule,
     )
 
     model = build()
@@ -138,9 +142,10 @@ def capture(
         functorch_config.activation_memory_budget = budget
 
         torch._dynamo.reset()
-        compiled = torch.compile(model, backend="aot_eager", dynamic=False)
-        out = compiled(*args)
-        out.backward()
+        with recorder:
+            compiled = torch.compile(model, backend="aot_eager", dynamic=False)
+            out = compiled(*args)
+            out.backward()
     finally:
         functorch_config.activation_memory_budget_solver = prev_solver
         functorch_config.activation_memory_budget = prev_budget
@@ -155,11 +160,13 @@ def capture_all(
     budget: float = 0.5,
     budgets: Optional[list[float]] = None,
     scale: int = 1,
+    schedule: str = DEFAULT_SCHEDULE,
 ) -> dict[str, AuditingSolver]:
     out: dict[str, AuditingSolver] = {}
     for name in names or list(MODELS):
         try:
-            out[name] = capture(name, outdir, budget=budget, budgets=budgets, scale=scale)
+            out[name] = capture(name, outdir, budget=budget, budgets=budgets,
+                                scale=scale, schedule=schedule)
             log.info("captured %s", name)
         except Exception:
             log.exception("capture failed for %s", name)
