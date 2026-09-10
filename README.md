@@ -184,7 +184,9 @@ is nondeterministic across processes. The simulator linearises the graph with
 `nx.topological_sort`, which is non-unique and whose tie-breaking depends on node
 insertion order; insertion order comes from a Python set of node names, so it
 varies with the hash seed. Identical graph hash, three different peaks across
-eight processes. See `docs/UPSTREAM_BUG.md`.
+eight processes.
+[pytorch/pytorch#196512](https://github.com/pytorch/pytorch/issues/196512).
+Writeup and the second, unfiled issue: `docs/UPSTREAM_BUG.md`.
 
 A second, deeper question is described there but not yet filed: peak memory is
 schedule-dependent, and the evaluator picks a schedule it never defines. On the
