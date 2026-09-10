@@ -56,49 +56,6 @@ def q2_proxy_error(results: list[dict]) -> dict[str, Any]:
     }
 
 
-def q3_exactness(results: list[dict]) -> dict[str, Any]:
-    """Per (graph, budget): spread on the proxy objective vs. on the true one."""
-    groups: dict[tuple[str, float], list[dict]] = {}
-    for r in results:
-        if r["ok"]:
-            groups.setdefault((r["label"], r["budget"]), []).append(r)
-
-    rows = []
-    for (label, budget), rs in sorted(groups.items()):
-        if len(rs) < 2:
-            continue
-        proxies = [r["proxy_peak_memory"] for r in rs]
-        trues = [r["true_peak_memory"] for r in rs]
-        best_proxy, best_true = min(proxies), min(trues)
-        # spread among plans that tie at the proxy optimum
-        tied = [r for r in rs if math.isclose(r["proxy_peak_memory"], best_proxy, rel_tol=1e-9)]
-        tied_true = [r["true_peak_memory"] for r in tied]
-        rows.append(
-            {
-                "label": label,
-                "budget": budget,
-                "n_solvers": len(rs),
-                "proxy_spread_pct": (max(proxies) - best_proxy) / best_proxy * 100
-                if best_proxy > 0 else float("nan"),
-                "true_spread_pct": (max(trues) - best_true) / best_true * 100
-                if best_true > 0 else float("nan"),
-                "n_tied_on_proxy": len(tied),
-                "tied_true_spread_pct": (max(tied_true) - min(tied_true)) / min(tied_true) * 100
-                if len(tied) > 1 and min(tied_true) > 0 else 0.0,
-                "best_true_solver": min(rs, key=lambda r: r["true_peak_memory"])["solver"],
-                "best_proxy_solver": min(rs, key=lambda r: r["proxy_peak_memory"])["solver"],
-            }
-        )
-    disagreements = sum(r["best_true_solver"] != r["best_proxy_solver"] for r in rows)
-    return {
-        "rows": rows,
-        "n_cells": len(rows),
-        "n_disagreements": disagreements,
-        "disagreement_rate": disagreements / len(rows) if rows else float("nan"),
-        "max_tied_true_spread_pct": max((r["tied_true_spread_pct"] for r in rows), default=0.0),
-    }
-
-
 def solver_cost(results: list[dict]) -> list[dict]:
     by: dict[str, list[dict]] = {}
     for r in results:
@@ -121,7 +78,7 @@ def solver_cost(results: list[dict]) -> list[dict]:
 
 def report(outdir: str | Path) -> str:
     graphs, results = load(outdir)
-    q1, q2, q3 = q1_input_scale(graphs), q2_proxy_error(results), q3_exactness(results)
+    q1, q2 = q1_input_scale(graphs), q2_proxy_error(results)
     cost = solver_cost(results)
 
     lines: list[str] = []
@@ -146,15 +103,6 @@ def report(outdir: str | Path) -> str:
         add(f"  p90                  : {q2['p90_pct']:+.1f}%")
         add(f"  max                  : {q2['max_pct']:+.1f}%")
         add(f"  fraction over 10%    : {q2['frac_over_10pct']*100:.0f}%")
-
-    add("\nQ3  DOES EXACTNESS SURVIVE?")
-    if q3 and q3["n_cells"]:
-        add(f"  (graph, budget) cells: {q3['n_cells']}")
-        add(f"  cells where the proxy-best solver is NOT the true-best: "
-            f"{q3['n_disagreements']} ({q3['disagreement_rate']*100:.0f}%)")
-        add(f"  max true-peak spread among plans TIED at the proxy optimum: "
-            f"{q3['max_tied_true_spread_pct']:.1f}%")
-        add("  reference: greedy's reported proxy-objective gap is ~7.4%")
 
     add("\nSOLVER COST")
     add(f"  {'solver':24s} {'median s':>10s} {'max s':>10s} {'peak MB':>10s} {'failed':>8s}")

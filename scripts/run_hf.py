@@ -18,7 +18,12 @@ def main():
     p.add_argument("-v", "--verbose", action="store_true")
     a = p.parse_args()
     logging.basicConfig(level=logging.INFO if a.verbose else logging.WARNING)
-    capture_all(a.outdir, names=a.models, budgets=a.budgets, scale=a.scale, schedule=a.schedule)
+    captured = capture_all(a.outdir, names=a.models, budgets=a.budgets, scale=a.scale, schedule=a.schedule)
+    if not any(v.records for v in captured.values()):
+        raise SystemExit(
+            f"no graphs captured from {a.models}; not writing a report. "
+            "check the capture errors above"
+        )
     text = (f"schedule: {a.schedule}   PYTHONHASHSEED: 0   scale: {a.scale}\n\n"
             + report(a.outdir) + "\n" + degeneracy_report(a.outdir))
     print(text)
