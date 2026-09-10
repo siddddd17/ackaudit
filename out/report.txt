@@ -27,10 +27,10 @@ Q3  DOES EXACTNESS SURVIVE?
 
 SOLVER COST
   solver                     median s      max s    peak MB   failed
-  dp                           0.0259     0.0587       0.02        0
-  dp_sliding_hirschberg        0.0522     0.1288       0.01        0
-  greedy                       0.0000     0.0002       0.00        0
-  ilp                          0.0047     2.3166      17.87        0
+  dp                           0.0268     0.0436       0.01        0
+  dp_sliding_hirschberg        0.0515     0.1203       0.01        0
+  greedy                       0.0000     0.0001       0.00        0
+  ilp                          0.0045     1.7739      17.86        0
 
 ========================================================================
 DEGENERACY CHECK
