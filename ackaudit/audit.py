@@ -30,6 +30,8 @@ from torch._functorch._activation_checkpointing.knapsack_evaluator import (
 )
 from torch._functorch.partitioners import CustomKnapsackSolver
 
+from .schedule import DEFAULT_SCHEDULE, Schedule
+
 log = logging.getLogger(__name__)
 
 # matches knapsack.dp_knapsack
@@ -68,6 +70,7 @@ class SolverResult:
     label: str
     solver: str
     budget: float
+    schedule: str
     ok: bool
     error: str = ""
     solver_seconds: float = 0.0
@@ -114,6 +117,7 @@ def audit_instance(
     banned_nodes: list[torch.fx.Node],
     budgets: Optional[list[float]] = None,
     solvers: Optional[list[str]] = None,
+    schedule: str = DEFAULT_SCHEDULE,
 ) -> tuple[GraphRecord, list[SolverResult]]:
     if budgets is None:
         budgets = [0.05, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
@@ -157,6 +161,7 @@ def audit_instance(
                 label=label,
                 solver=name,
                 budget=budget,
+                schedule=schedule,
                 ok=ok,
                 error=err,
                 solver_seconds=secs,
@@ -166,16 +171,17 @@ def audit_instance(
             )
             if ok:
                 try:
-                    proxy = evaluator.evaluate_knapsack_output(
-                        saved_nodes_idxs=saved,
-                        recomputable_node_idxs=recomputed,
-                        account_for_backward_pass=False,
-                    )
-                    true = evaluator.evaluate_knapsack_output(
-                        saved_nodes_idxs=saved,
-                        recomputable_node_idxs=recomputed,
-                        account_for_backward_pass=True,
-                    )
+                    with Schedule(schedule, provider.graph_nodes_in_order):
+                        proxy = evaluator.evaluate_knapsack_output(
+                            saved_nodes_idxs=saved,
+                            recomputable_node_idxs=recomputed,
+                            account_for_backward_pass=False,
+                        )
+                        true = evaluator.evaluate_knapsack_output(
+                            saved_nodes_idxs=saved,
+                            recomputable_node_idxs=recomputed,
+                            account_for_backward_pass=True,
+                        )
                     res.proxy_peak_memory = proxy["peak_memory"]
                     res.true_peak_memory = true["peak_memory"]
                     res.recomputation_runtime = proxy["recomputation_runtime"]
@@ -202,6 +208,8 @@ class AuditingSolver(CustomKnapsackSolver):
         budgets: Optional[list[float]] = None,
         solvers: Optional[list[str]] = None,
         delegate: SolverFn = dp_knapsack,
+        recorder: Optional["RuntimeRecorder"] = None,
+        schedule: str = DEFAULT_SCHEDULE,
     ) -> None:
         self.outdir = Path(outdir)
         self.outdir.mkdir(parents=True, exist_ok=True)
@@ -209,6 +217,8 @@ class AuditingSolver(CustomKnapsackSolver):
         self.budgets = budgets
         self.solvers = solvers
         self.delegate = delegate
+        self.recorder = recorder
+        self.schedule = schedule
         self.records: list[GraphRecord] = []
         self.results: list[SolverResult] = []
         self._counter = 0
@@ -221,7 +231,7 @@ class AuditingSolver(CustomKnapsackSolver):
         node_info: Any,
         all_recomputable_banned_nodes: list[torch.fx.Node],
     ) -> tuple[list[int], list[int]]:
-        runtimes = _runtimes_for(all_recomputable_banned_nodes)
+        runtimes = self.recorder.lookup(all_recomputable_banned_nodes)
         tag = f"{self.label}#{self._counter}"
         self._counter += 1
 
@@ -235,6 +245,7 @@ class AuditingSolver(CustomKnapsackSolver):
                 banned_nodes=all_recomputable_banned_nodes,
                 budgets=self.budgets,
                 solvers=self.solvers,
+                schedule=self.schedule,
             )
             self.records.append(record)
             self.results.extend(results)
@@ -258,7 +269,44 @@ class AuditingSolver(CustomKnapsackSolver):
         )
 
 
-def _runtimes_for(nodes: list[torch.fx.Node]) -> list[float]:
-    from torch._functorch.partitioners import estimate_runtime
+class RuntimeRecorder:
+    """Caches the runtimes the partitioner computes for each node.
 
-    return [estimate_runtime(n) for n in nodes]
+    The solver runs inside `no_dispatch()` (partitioners.py, get_saved_values_
+    knapsack), where estimate_runtime's flops mode executes node.target on real
+    materialized tensors instead of fake ones. That crashes on ops like embedding
+    whose arguments must be in range. The partitioner computes runtimes outside
+    that block, so we record them there and look them up later.
+    """
+
+    def __init__(self) -> None:
+        self.cache: dict[torch.fx.Node, float] = {}
+        self._orig = None
+
+    def __enter__(self) -> "RuntimeRecorder":
+        import torch._functorch.partitioners as P
+
+        self._orig = P.estimate_runtime
+
+        def wrapped(node):
+            value = self._orig(node)
+            self.cache[node] = value
+            return value
+
+        P.estimate_runtime = wrapped
+        return self
+
+    def __exit__(self, *exc) -> None:
+        import torch._functorch.partitioners as P
+
+        if self._orig is not None:
+            P.estimate_runtime = self._orig
+
+    def lookup(self, nodes: list[torch.fx.Node]) -> list[float]:
+        missing = [n for n in nodes if n not in self.cache]
+        if missing:
+            raise KeyError(
+                f"{len(missing)}/{len(nodes)} nodes have no recorded runtime; "
+                "the recorder was not active when the partitioner ran"
+            )
+        return [self.cache[n] for n in nodes]
