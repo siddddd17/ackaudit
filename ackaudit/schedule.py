@@ -23,13 +23,23 @@ torch.cuda.max_memory_allocated().
 
 from __future__ import annotations
 
-from typing import Optional
+import inspect
+from typing import Self
 
 import networkx as nx
 import torch._functorch._activation_checkpointing.knapsack_evaluator as _ke
 
 SCHEDULES = ("default", "lexicographic", "fx_order")
 DEFAULT_SCHEDULE = "fx_order"
+
+_PATCH_TARGET = "nx.topological_sort"
+
+
+def _evaluator_calls_patch_target() -> bool:
+    src = inspect.getsource(
+        _ke.KnapsackEvaluator._get_backward_memory_from_topologically_sorted_graph
+    )
+    return _PATCH_TARGET in src
 
 
 class Schedule:
@@ -39,7 +49,7 @@ class Schedule:
     the duration of the block. Not thread-safe; evaluation here is synchronous.
     """
 
-    def __init__(self, mode: str = DEFAULT_SCHEDULE, node_order: Optional[list[str]] = None):
+    def __init__(self, mode: str = DEFAULT_SCHEDULE, node_order: list[str] | None = None):
         if mode not in SCHEDULES:
             raise ValueError(f"unknown schedule {mode!r}, expected one of {SCHEDULES}")
         if mode == "fx_order" and not node_order:
@@ -48,7 +58,15 @@ class Schedule:
         self.node_order = node_order
         self._orig = None
 
-    def __enter__(self) -> "Schedule":
+    def __enter__(self) -> Self:
+        if not _evaluator_calls_patch_target():
+            raise RuntimeError(
+                "KnapsackEvaluator._get_backward_memory_from_topologically_sorted_graph no "
+                f"longer calls {_PATCH_TARGET}. The schedule patch would be a silent no-op. "
+                "The evaluator source has changed (e.g. pytorch/pytorch#196872 which switches "
+                "to nx.lexicographical_topological_sort). Update ackaudit/schedule.py to patch "
+                "the new symbol before running any measurement."
+            )
         self._orig = _ke.nx.topological_sort
         if self.mode == "default":
             return self
