@@ -2,7 +2,7 @@ import pytest
 
 torch = pytest.importorskip("torch")
 
-from ackaudit.audit import QUANTISATION_SCALE, SOLVERS, audit_instance
+from ackaudit.audit import QUANTISATION_SCALE, SOLVERS
 from ackaudit.capture import capture
 
 

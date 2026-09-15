@@ -1,11 +1,15 @@
 from ackaudit._hashseed import pin
+
 pin()
 
-import argparse, logging
+import argparse
+import logging
 from pathlib import Path
-from ackaudit.capture import capture_all, MODELS
-from ackaudit.analyze import report, degeneracy_report
+
+from ackaudit.analyze import degeneracy_report, report
+from ackaudit.capture import MODELS, capture_all
 from ackaudit.schedule import DEFAULT_SCHEDULE, SCHEDULES
+
 
 def main():
     p = argparse.ArgumentParser()

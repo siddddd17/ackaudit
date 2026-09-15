@@ -7,8 +7,8 @@ re-captures the graph and re-solves to get the actual index lists.
 from __future__ import annotations
 
 import argparse
-import json
 import glob
+import json
 from collections import defaultdict
 
 import torch
@@ -29,7 +29,8 @@ def worst_cell(outdir: str):
     """Find the (label, budget) cell with the largest spread among tied plans."""
     rows = []
     for f in sorted(glob.glob(f"{outdir}/*/results.json")):
-        rows += json.load(open(f))
+        with open(f) as fh:
+            rows += json.load(fh)
     cells = defaultdict(list)
     for r in rows:
         if r["ok"]:
@@ -78,8 +79,9 @@ def grab(model_name: str):
         try:
             compiled = torch.compile(build(), backend="aot_eager", dynamic=False)
             compiled(*make_inputs()).backward()
-        except Exception:
-            pass  # _Stop propagates wrapped; payload is what we want
+        except Exception:  # noqa: BLE001, S110
+            # _Stop propagates wrapped; payload is what we want
+            pass
     finally:
         functorch_config.activation_memory_budget_solver = prev_s
         functorch_config.activation_memory_budget = prev_b

@@ -11,9 +11,10 @@ import json
 import logging
 import time
 import tracemalloc
-from dataclasses import dataclass, field, asdict
+from collections.abc import Callable
+from dataclasses import asdict, dataclass, field
 from pathlib import Path
-from typing import Any, Callable, Optional
+from typing import Any, Self
 
 import torch
 from torch._functorch._activation_checkpointing.graph_info_provider import (
@@ -96,11 +97,11 @@ def _measure(fn: SolverFn, memories, runtimes, budget):
     tracemalloc.start()
     start = time.perf_counter()
     try:
-        value, saved, recomputed = fn(memories, runtimes, budget)
+        _value, saved, recomputed = fn(memories, runtimes, budget)
         elapsed = time.perf_counter() - start
         _, peak = tracemalloc.get_traced_memory()
         return True, "", elapsed, peak, saved, recomputed
-    except Exception as exc:  # record OOM and solver bugs, don't raise
+    except Exception as exc:  # noqa: BLE001 -- record OOM and solver bugs, don't raise
         elapsed = time.perf_counter() - start
         _, peak = tracemalloc.get_traced_memory()
         return False, f"{type(exc).__name__}: {exc}", elapsed, peak, [], []
@@ -115,8 +116,8 @@ def audit_instance(
     max_memory: float,
     joint_graph: torch.fx.Graph,
     banned_nodes: list[torch.fx.Node],
-    budgets: Optional[list[float]] = None,
-    solvers: Optional[list[str]] = None,
+    budgets: list[float] | None = None,
+    solvers: list[str] | None = None,
     schedule: str = DEFAULT_SCHEDULE,
 ) -> tuple[GraphRecord, list[SolverResult]]:
     if budgets is None:
@@ -187,7 +188,7 @@ def audit_instance(
                     res.recomputation_runtime = proxy["recomputation_runtime"]
                     res.non_ac_peak_memory = proxy["non_ac_peak_memory"]
                     res.theoretical_max_runtime = proxy["theoretical_max_runtime"]
-                except Exception as exc:
+                except Exception as exc:  # noqa: BLE001 -- record evaluator errors, don't raise
                     res.ok = False
                     res.error = f"evaluate: {type(exc).__name__}: {exc}"
             results.append(res)
@@ -205,10 +206,10 @@ class AuditingSolver(CustomKnapsackSolver):
         self,
         outdir: str | Path,
         label: str = "graph",
-        budgets: Optional[list[float]] = None,
-        solvers: Optional[list[str]] = None,
+        budgets: list[float] | None = None,
+        solvers: list[str] | None = None,
         delegate: SolverFn = dp_knapsack,
-        recorder: Optional["RuntimeRecorder"] = None,
+        recorder: RuntimeRecorder | None = None,
         schedule: str = DEFAULT_SCHEDULE,
     ) -> None:
         self.outdir = Path(outdir)
@@ -283,7 +284,7 @@ class RuntimeRecorder:
         self.cache: dict[torch.fx.Node, float] = {}
         self._orig = None
 
-    def __enter__(self) -> "RuntimeRecorder":
+    def __enter__(self) -> Self:
         import torch._functorch.partitioners as P
 
         self._orig = P.estimate_runtime

@@ -10,9 +10,9 @@ from pathlib import Path
 import matplotlib
 
 matplotlib.use("Agg")
-import matplotlib.pyplot as plt  # noqa: E402
+import matplotlib.pyplot as plt
 
-from .analyze import load, tie_sets  # noqa: E402
+from .analyze import load, tie_sets
 
 SYNTH = "#4C72B0"
 REAL = "#C44E52"
@@ -26,7 +26,6 @@ def fig_heterogeneity_vs_ties(g_s, r_s, g_r, r_r, path: Path) -> None:
         (g_s, r_s, "synthetic", SYNTH),
         (g_r, r_r, "real", REAL),
     ):
-        ties = {r["label"]: r for r in tie_sets(results)["rows"]}
         per_label: dict[str, list] = {}
         for r in tie_sets(results)["rows"]:
             per_label.setdefault(r["label"], []).append(r)

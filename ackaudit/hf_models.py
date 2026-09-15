@@ -7,10 +7,10 @@ capture on CPU; scale them up with the --scale flag when running on a GPU box.
 
 from __future__ import annotations
 
-from typing import Callable
+from collections.abc import Callable
 
 import torch
-import torch.nn as nn
+from torch import nn
 
 
 def _require_transformers():

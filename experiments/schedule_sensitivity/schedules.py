@@ -23,7 +23,7 @@ from __future__ import annotations
 import json
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any
 
 import torch
 import torch._functorch.config as functorch_config
@@ -108,7 +108,7 @@ class _Comparer(CustomKnapsackSolver):
                                     account_for_backward_pass=False,
                                 )["peak_memory"]
                         row.peaks[mode] = out["peak_memory"]
-                    except Exception as exc:
+                    except Exception as exc:  # noqa: BLE001 -- record per-mode failures
                         row.errors[mode] = f"{type(exc).__name__}: {exc}"
                 self.rows.append(row)
 
@@ -123,7 +123,7 @@ def compare_schedules(
     name: str,
     build,
     make_inputs,
-    budgets: Optional[list[float]] = None,
+    budgets: list[float] | None = None,
 ) -> list[ScheduleRow]:
     budgets = budgets or [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8]
     recorder = RuntimeRecorder()
@@ -146,8 +146,8 @@ def compare_schedules(
 
 def run(
     outdir: str | Path,
-    budgets: Optional[list[float]] = None,
-    names: Optional[list[str]] = None,
+    budgets: list[float] | None = None,
+    names: list[str] | None = None,
 ) -> list[ScheduleRow]:
     from .graph_families import families
 
@@ -157,7 +157,7 @@ def run(
         build, mk = zoo[name]
         try:
             rows += compare_schedules(name, build, mk, budgets)
-        except Exception as exc:
+        except Exception as exc:  # noqa: BLE001 -- skip and report; other graphs may succeed
             print(f"  {name}: capture failed, {type(exc).__name__}: {exc}")
     outdir = Path(outdir)
     outdir.mkdir(parents=True, exist_ok=True)

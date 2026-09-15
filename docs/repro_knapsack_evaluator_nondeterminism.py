@@ -21,15 +21,15 @@ N_PROCS = 8
 
 def child():
     import torch
-    import torch.nn as nn
     import torch._functorch.config as fc
-    from torch._functorch.partitioners import CustomKnapsackSolver, dp_knapsack
+    from torch import nn
     from torch._functorch._activation_checkpointing.graph_info_provider import (
         GraphInfoProvider,
     )
     from torch._functorch._activation_checkpointing.knapsack_evaluator import (
         KnapsackEvaluator,
     )
+    from torch._functorch.partitioners import CustomKnapsackSolver, dp_knapsack
 
     # Parallel branches give the joint DAG many valid topological orders.
     # A pure chain has essentially one and will not reproduce this.
@@ -103,7 +103,10 @@ def parent():
     hashes = []
     for i in range(N_PROCS):
         out = subprocess.run(
-            [sys.executable, __file__, "--child"], capture_output=True, text=True
+            [sys.executable, __file__, "--child"],
+            capture_output=True,
+            text=True,
+            check=False,
         )
         if out.returncode != 0:
             print(out.stderr[-2000:])
