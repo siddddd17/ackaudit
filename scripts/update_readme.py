@@ -16,8 +16,8 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from ackaudit.analyze import heterogeneity, load, q1_input_scale, tie_sets  # noqa: E402
-from ackaudit.figures import make_figure  # noqa: E402
+from ackaudit.analyze import heterogeneity, load, q1_input_scale, tie_sets
+from ackaudit.figures import make_figure
 
 START = "<!-- RESULTS:START -->"
 END = "<!-- RESULTS:END -->"
@@ -126,6 +126,15 @@ def main() -> None:
     args = ap.parse_args()
 
     import torch
+
+    for d in (args.synthetic, args.real):
+        g, r = load(d)
+        if not g or not r:
+            raise SystemExit(
+                f"no sweep data under {d!r} (found {len(g)} graphs, {len(r)} results). "
+                "Run scripts/run_audit.py and scripts/run_hf.py before regenerating the "
+                "README, or the results section would be overwritten with zeros and NaN."
+            )
 
     fig = make_figure(args.synthetic, args.real)
     section = build_section(args.synthetic, args.real, args.schedule, torch.__version__)

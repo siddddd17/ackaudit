@@ -2,6 +2,16 @@ __pycache__/
 *.pyc
 .venv/
 out*/
+!out/
+!out_hf/
+out/**
+out_hf/**
+!out/**/
+!out_hf/**/
+!out/**/*.json
+!out_hf/**/*.json
+!out/**/report.txt
+!out_hf/**/report.txt
 *.egg-info/
 .pytest_cache/
 .ruff_cache/
