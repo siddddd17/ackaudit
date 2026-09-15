@@ -3,12 +3,12 @@
 from __future__ import annotations
 
 import logging
+from collections.abc import Callable
 from pathlib import Path
-from typing import Callable, Optional
 
 import torch
 import torch._functorch.config as functorch_config
-import torch.nn as nn
+from torch import nn
 
 from .audit import AuditingSolver, RuntimeRecorder
 from .schedule import DEFAULT_SCHEDULE
@@ -17,7 +17,6 @@ log = logging.getLogger(__name__)
 
 
 # Varied graph shapes: chain, branching, transformer, conv.
-# TODO: swap for real HF checkpoints once the toy numbers are understood.
 
 
 class DeepMLP(nn.Module):
@@ -118,8 +117,8 @@ def capture(
     name: str,
     outdir: str | Path,
     budget: float = 0.5,
-    budgets: Optional[list[float]] = None,
-    solvers: Optional[list[str]] = None,
+    budgets: list[float] | None = None,
+    solvers: list[str] | None = None,
     scale: int = 1,
     schedule: str = DEFAULT_SCHEDULE,
 ) -> AuditingSolver:
@@ -156,9 +155,9 @@ def capture(
 
 def capture_all(
     outdir: str | Path,
-    names: Optional[list[str]] = None,
+    names: list[str] | None = None,
     budget: float = 0.5,
-    budgets: Optional[list[float]] = None,
+    budgets: list[float] | None = None,
     scale: int = 1,
     schedule: str = DEFAULT_SCHEDULE,
 ) -> dict[str, AuditingSolver]:
