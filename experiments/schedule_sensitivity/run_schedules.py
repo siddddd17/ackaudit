@@ -2,14 +2,14 @@ import argparse
 from pathlib import Path
 
 from ackaudit._hashseed import pin
-from experiments.schedule_sensitivity.schedules import run, report
+from experiments.schedule_sensitivity.schedules import report, run
 
 
 def main():
     p = argparse.ArgumentParser(
         description="Compare backward-memory simulation under schedules A/B/C."
     )
-    p.add_argument("--outdir", default="out_schedules")
+    p.add_argument("--outdir", default="results/schedule_sensitivity")
     p.add_argument("--graphs", nargs="*", default=None)
     p.add_argument(
         "--budgets",
@@ -19,13 +19,15 @@ def main():
     )
     a = p.parse_args()
 
-    rows = run(a.outdir, budgets=a.budgets, names=a.graphs)
+    outdir = Path(a.outdir)
+    outdir.mkdir(parents=True, exist_ok=True)
+    rows = run(str(outdir), budgets=a.budgets, names=a.graphs)
     if not rows:
         raise SystemExit("no graphs captured; not writing a report")
 
     text = report(rows)
     print(text)
-    Path(a.outdir, "report.txt").write_text(text)
+    (outdir / "schedule_report.txt").write_text(text)
 
 
 if __name__ == "__main__":

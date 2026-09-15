@@ -1,7 +1,13 @@
 # Upstream: schedule-dependent and nondeterministic backward-memory simulation
 
-Status: verified locally on torch 2.14.0. Not yet reported. Draft for one or two
-PyTorch issues.
+| bug | what | status |
+|---|---|---|
+| 1 | `evaluate_knapsack_output` returns different peaks across processes for identical inputs | filed as pytorch/pytorch#196512, PR pytorch/pytorch#196872 open |
+| 2 | the simulator silently chooses one of many valid schedules and calls the result "the" backward memory | not filed; blocked on the measured comparison described below |
+
+Bug 1 is a symptom of Bug 2. Pinning the topological order fixes
+reproducibility without establishing that the pinned order matches the schedule
+autograd actually runs.
 
 Two separable problems. The first is a straightforward reproducibility bug. The
 second is a semantics question that is more interesting and harder to dismiss.
@@ -135,12 +141,52 @@ transformer. Report schedule, peak, and the number of distinct peaks per graph.
 C is available: `GraphInfoProvider` stores `graph_nodes_in_order`, built at line
 80 as `[node.name for node in joint_graph.nodes]`.
 
+### Measured spread
+
+Seven synthetic families, eight budgets each, 56 cells total. Full table in
+`results/schedule_sensitivity/schedule_report.txt`.
+
+| schedule | mean simulated peak | cells where uniquely lowest |
+|---|---|---|
+| A default `nx.topological_sort` | 0.5519 | 0 |
+| B `nx.lexicographical_topological_sort` | 0.4599 | 20 |
+| C reverse FX order | 0.4966 | 1 |
+
+Per budget (mean peak across the seven families):
+
+| budget | A | B | C |
+|---|---|---|---|
+| 0.20 | 0.4947 | 0.3151 | 0.3485 |
+| 0.50 | 0.5773 | 0.4917 | 0.5813 |
+| 0.80 | 0.6048 | 0.6048 | 0.6048 |
+
+Every peak on every row is a valid answer to "simulate the backward pass"; the
+DAGs and saved-node sets are identical. A is never the uniquely lowest and has
+the highest mean, so if any schedule is worth removing on grounds of pessimism
+alone it is the current default. This is not the same as saying B or C is
+right. Lower is not more correct: only a measured comparison against real
+backward memory can call one of these correct, and that comparison is not in
+this repo.
+
 **The decisive experiment is not "which schedule gives the smallest peak."** It
 is whether any of them matches the memory behaviour of a real backward pass
 measured with `torch.cuda.max_memory_allocated()`. Until that is done, reverse FX
 order should not be described as the true backward order. The FX graph is stored
 in forward topological order, and autograd's engine has its own scheduling
 semantics; the two are not known to coincide.
+
+### Regenerating
+
+```
+python -m experiments.schedule_sensitivity.run_schedules
+```
+
+Writes `results/schedule_sensitivity/schedule_report.txt` and
+`schedules.json` under the same directory. The three schedules are defined in
+`experiments/schedule_sensitivity/schedules.py`; graph families in
+`experiments/schedule_sensitivity/graph_families.py`. Do not confuse either
+with `ackaudit/schedule.py` (singular), the small context manager that pins
+the evaluator's topological sort.
 
 ---
 
@@ -150,8 +196,8 @@ semantics; the two are not known to coincide.
 - Both paths are off by default (`account_for_backward_pass=False`), so
   production partitioning is unaffected today. That lowers severity and may lower
   maintainer interest, but it also means a fix carries almost no regression risk.
-- The schedule comparison currently rests on one graph family. Run the full A/B/C
-  matrix before putting numbers in the issue.
+- The schedule comparison in the Measured spread table above covers seven
+  synthetic families. It has not been run against a real transformer.
 
 ## Consequence for this project
 
