@@ -1,0 +1,245 @@
+[
+  {
+    "model": "bert",
+    "budget": 0.05,
+    "scale": 8,
+    "torch_version": "2.14.0+cu130",
+    "device_name": "NVIDIA GeForce GTX 1650",
+    "n_items": 354,
+    "n_saved": 71,
+    "n_recomputed": 283,
+    "solver_called": true,
+    "proxy_peak": 0.04938117625413364,
+    "simulated": {
+      "default": 0.07213816410618919,
+      "lexicographic": 0.07213816410618919,
+      "fx_order": 0.07213816410618919
+    },
+    "simulate_error": "",
+    "resident_before": 134220800,
+    "measured_peaks": [
+      558257152,
+      559305728,
+      559305728,
+      559305728,
+      559305728
+    ],
+    "measure_error": ""
+  },
+  {
+    "model": "bert",
+    "budget": 0.1,
+    "scale": 8,
+    "torch_version": "2.14.0+cu130",
+    "device_name": "NVIDIA GeForce GTX 1650",
+    "n_items": 354,
+    "n_saved": 91,
+    "n_recomputed": 263,
+    "solver_called": true,
+    "proxy_peak": 0.09876235250826727,
+    "simulated": {
+      "default": 0.12151934036032283,
+      "lexicographic": 0.12151934036032283,
+      "fx_order": 0.12151934036032283
+    },
+    "simulate_error": "",
+    "resident_before": 134220800,
+    "measured_peaks": [
+      689853440,
+      690902016,
+      690902016,
+      690902016,
+      690902016
+    ],
+    "measure_error": ""
+  },
+  {
+    "model": "bert",
+    "budget": 0.15,
+    "scale": 8,
+    "torch_version": "2.14.0+cu130",
+    "device_name": "NVIDIA GeForce GTX 1650",
+    "n_items": 354,
+    "n_saved": 154,
+    "n_recomputed": 200,
+    "solver_called": true,
+    "proxy_peak": 0.1487384826931736,
+    "simulated": {
+      "default": 0.16911565482213836,
+      "lexicographic": 0.16911565482213836,
+      "fx_order": 0.16911565482213836
+    },
+    "simulate_error": "",
+    "resident_before": 134220800,
+    "measured_peaks": [
+      794711040,
+      796808192,
+      796808192,
+      796808192,
+      796808192
+    ],
+    "measure_error": ""
+  },
+  {
+    "model": "bert",
+    "budget": 0.2,
+    "scale": 8,
+    "torch_version": "2.14.0+cu130",
+    "device_name": "NVIDIA GeForce GTX 1650",
+    "n_items": 354,
+    "n_saved": 222,
+    "n_recomputed": 132,
+    "solver_called": true,
+    "proxy_peak": 0.19811965894730724,
+    "simulated": {
+      "default": 0.2179018771454993,
+      "lexicographic": 0.2179018771454993,
+      "fx_order": 0.2179018771454993
+    },
+    "simulate_error": "",
+    "resident_before": 134220800,
+    "measured_peaks": [
+      897864704,
+      898913280,
+      898913280,
+      898913280,
+      898913280
+    ],
+    "measure_error": ""
+  },
+  {
+    "model": "bert",
+    "budget": 0.25,
+    "scale": 8,
+    "torch_version": "2.14.0+cu130",
+    "device_name": "NVIDIA GeForce GTX 1650",
+    "n_items": 354,
+    "n_saved": 230,
+    "n_recomputed": 124,
+    "solver_called": true,
+    "proxy_peak": 0.2475008352014409,
+    "simulated": {
+      "default": 0.2659444070553944,
+      "lexicographic": 0.2659444070553944,
+      "fx_order": 0.2659444070553944
+    },
+    "simulate_error": "",
+    "resident_before": 134220800,
+    "measured_peaks": [
+      1022776320,
+      1023824896,
+      1023824896,
+      1023824896,
+      1023824896
+    ],
+    "measure_error": ""
+  },
+  {
+    "model": "bert",
+    "budget": 0.3,
+    "scale": 8,
+    "torch_version": "2.14.0+cu130",
+    "device_name": "NVIDIA GeForce GTX 1650",
+    "n_items": 354,
+    "n_saved": 235,
+    "n_recomputed": 119,
+    "solver_called": true,
+    "proxy_peak": 0.29509714966325645,
+    "simulated": {
+      "default": 0.31354072151720996,
+      "lexicographic": 0.31354072151720996,
+      "fx_order": 0.31354072151720996
+    },
+    "simulate_error": "",
+    "resident_before": 134220800,
+    "measured_peaks": [
+      1148605440,
+      1149654016,
+      1149654016,
+      1149654016,
+      1149654016
+    ],
+    "measure_error": ""
+  },
+  {
+    "model": "bert",
+    "budget": 0.4,
+    "scale": 8,
+    "torch_version": "2.14.0+cu130",
+    "device_name": "NVIDIA GeForce GTX 1650",
+    "n_items": 354,
+    "n_saved": 244,
+    "n_recomputed": 110,
+    "solver_called": true,
+    "proxy_peak": 0.3986191336177053,
+    "simulated": {
+      "default": 0.4170627054716588,
+      "lexicographic": 0.4170627054716588,
+      "fx_order": 0.4170627054716588
+    },
+    "simulate_error": "",
+    "resident_before": 134220800,
+    "measured_peaks": [
+      1425429504,
+      1426478080,
+      1426478080,
+      1426478080,
+      1426478080
+    ],
+    "measure_error": ""
+  },
+  {
+    "model": "bert",
+    "budget": 0.5,
+    "scale": 8,
+    "torch_version": "2.14.0+cu130",
+    "device_name": "NVIDIA GeForce GTX 1650",
+    "n_items": 354,
+    "n_saved": 256,
+    "n_recomputed": 98,
+    "solver_called": true,
+    "proxy_peak": 0.4950016704028818,
+    "simulated": {
+      "default": 0.5134452422568354,
+      "lexicographic": 0.5134452422568354,
+      "fx_order": 0.5134452422568354
+    },
+    "simulate_error": "",
+    "resident_before": 134220800,
+    "measured_peaks": [
+      1644057600,
+      1645630464,
+      1645630464,
+      1645630464,
+      1645630464
+    ],
+    "measure_error": ""
+  },
+  {
+    "model": "bert",
+    "budget": 0.6,
+    "scale": 8,
+    "torch_version": "2.14.0+cu130",
+    "device_name": "NVIDIA GeForce GTX 1650",
+    "n_items": 354,
+    "n_saved": 264,
+    "n_recomputed": 90,
+    "solver_called": true,
+    "proxy_peak": 0.5901942993265129,
+    "simulated": {
+      "default": 0.6086378711804665,
+      "lexicographic": 0.6086378711804665,
+      "fx_order": 0.6086378711804665
+    },
+    "simulate_error": "",
+    "resident_before": 134220800,
+    "measured_peaks": [
+      1898337280,
+      1899385856,
+      1899385856,
+      1899385856,
+      1899385856
+    ],
+    "measure_error": ""
+  }
+]

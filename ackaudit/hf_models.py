@@ -66,7 +66,7 @@ class ViTWrap(nn.Module):
 
 
 class BertWrap(nn.Module):
-    def __init__(self, layers: int = 4, hidden: int = 192, heads: int = 3, vocab: int = 1000):
+    def __init__(self, layers: int = 4, hidden: int = 192, heads: int = 3, vocab: int = 1000, max_position = 512):
         super().__init__()
         _require_transformers()
         from transformers import BertConfig, BertModel
@@ -78,6 +78,7 @@ class BertWrap(nn.Module):
                 num_attention_heads=heads,
                 intermediate_size=hidden * 4,
                 vocab_size=vocab,
+                max_position_embeddings = max_position,
             ),
             add_pooling_layer=False,
         )
@@ -103,7 +104,7 @@ def hf_models(scale: int = 1) -> dict[str, ModelSpec]:
             lambda: (torch.randn(2, 3, 64, 64, requires_grad=True),),
         ),
         "bert": (
-            lambda: BertWrap(layers=L),
+            lambda: BertWrap(layers=L, max_position=max(512,seq)),
             lambda: (torch.randint(0, 1000, (2, seq)),),
         ),
     }

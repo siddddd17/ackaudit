@@ -1,0 +1,24 @@
+MEASUREMENT D  llama scale=6
+torch 2.14.0+cu130  NVIDIA GeForce GTX 1650
+
+Simulated peaks are normalised fractions; measured is bytes. Compare
+shape across budgets and plan ranking, not absolute values.
+
+noise floor (max spread over 5 identical reps): 0.0 KB
+measured activation span across budgets: 494.4 MB
+
+ budget  saved  recomp  measured MB    proxy       default lexicographic      fx_order
+   0.05     20     224        661.6   0.0498        0.1780        0.1780        0.1780
+   0.10     41     203        292.3   0.0985        0.1164        0.1164        0.1164
+   0.15     59     185        167.1   0.1502        0.1680        0.1680        0.1680
+   0.20     73     171        197.5   0.2003        0.2182        0.2182        0.2182
+   0.30    124     120        240.1   0.3014        0.3193        0.3193        0.3193
+
+Spearman rank correlation with the measured curve:
+  proxy            -0.600
+  default          -0.100
+  lexicographic    -0.100
+  fx_order         -0.100
+
+rho near +1 means that schedule orders budgets the way the allocator does.
+rho near 0 across all of them means the simulator tracks nothing measurable.

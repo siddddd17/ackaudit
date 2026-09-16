@@ -1,0 +1,21 @@
+MEASUREMENT D  bert scale=8
+torch 2.14.0+cu130  NVIDIA GeForce GTX 1650
+
+Simulated peaks are normalised fractions; measured is bytes. Compare
+shape across budgets and plan ranking, not absolute values.
+
+noise floor (max spread over 5 identical reps): 524.3 KB
+measured activation span across budgets: 254.3 MB
+
+ budget  saved  recomp  measured MB    proxy       default lexicographic      fx_order
+   0.70    273      81       2052.0   0.6973        0.7157        0.7157        0.7157
+   0.80    281      73       2306.2   0.7925        0.8109        0.8109        0.8109
+
+Spearman rank correlation with the measured curve:
+  proxy            +1.000
+  default          +1.000
+  lexicographic    +1.000
+  fx_order         +1.000
+
+rho near +1 means that schedule orders budgets the way the allocator does.
+rho near 0 across all of them means the simulator tracks nothing measurable.
