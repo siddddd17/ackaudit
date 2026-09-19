@@ -75,6 +75,7 @@ class Cell:
     budget: float
     scale: int
     torch_version: str
+    device: str = "cpu"
 
     n_items: int = 0
     n_saved: int = 0
@@ -152,13 +153,14 @@ class ClosureSolver(CustomKnapsackSolver):
         return None
 
 
-def run_one(model_name: str, budget: float, scale: int) -> Cell:
+def run_one(model_name: str, budget: float, scale: int, device: str = "cpu") -> Cell:
     cell = Cell(
-        model=model_name, budget=budget, scale=scale, torch_version=torch.__version__
+        model=model_name, budget=budget, scale=scale,
+        torch_version=torch.__version__, device=device,
     )
     build, make_inputs = _resolve(model_name, scale=scale)
-    model = build()
-    args = make_inputs()
+    model = build().to(device)
+    args = tuple(a.to(device) for a in make_inputs())
 
     recorder = RuntimeRecorder()
     prev_solver = functorch_config.activation_memory_budget_solver
@@ -192,6 +194,7 @@ def report(cells: list[Cell]) -> str:
         "",
         f"{'budget':>7} {'saved':>6} {'recomp':>7} {'median':>7} {'p90':>6} {'max':>6} "
         f"{'w median':>9} {'w max':>8}",
+        f"device={ok[0].device}  torch {ok[0].torch_version}"
     ]
     for c in sorted(ok, key=lambda c: c.budget):
         s = c.summary()
@@ -213,11 +216,21 @@ def main() -> None:
     ap.add_argument("--scale", type=int, default=8)
     ap.add_argument("--budgets", type=float, nargs="*", default=DEFAULT_BUDGETS)
     ap.add_argument("--outdir", default="results/recompute_closure")
+    ap.add_argument(
+        "--device",
+        default="cpu",
+        choices=["cpu", "cuda"],
+        help="the candidate node set differs between devices on some models; "
+        "pass the device used for the measurement being explained",
+    )
     args = ap.parse_args()
+
+    if args.device == "cuda" and not torch.cuda.is_available():
+        raise SystemExit("--device cuda requested but torch.cuda.is_available() is False")
 
     cells = []
     for budget in args.budgets:
-        c = run_one(args.model, budget, args.scale)
+        c = run_one(args.model, budget, args.scale, args.device)
         cells.append(c)
         if c.sizes:
             s = c.summary()
@@ -230,15 +243,12 @@ def main() -> None:
 
     outdir = Path(args.outdir)
     outdir.mkdir(parents=True, exist_ok=True)
-    stem = f"{args.model}_scale{args.scale}"
-    (outdir / f"{stem}.json").write_text(
-        json.dumps([asdict(c) for c in cells], indent=2)
-    )
+    stem = f"{args.model}_scale{args.scale}_{args.device}"
+    (outdir / f"{stem}.json").write_text(json.dumps([asdict(c) for c in cells], indent=2))
     text = report(cells)
     (outdir / f"{stem}_report.txt").write_text(text)
     print()
     print(text)
-
 
 if __name__ == "__main__":
     main()

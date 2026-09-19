@@ -1,0 +1,15 @@
+RECOMPUTE CLOSURE  llama scale=8  torch 2.14.0+cu130
+
+For each recomputed node, the number of unsaved activations that must be
+materialised to produce it. The knapsack weighs items by their own size
+only, so these counts do not enter the objective.
+
+ budget  saved  recomp  median    p90    max  w median    w max
+device=cuda  torch 2.14.0+cu130
+   0.05     27     297     5.0     35     65    0.0134   0.1375
+   0.10     54     270     1.0      6      6    0.0018   0.0134
+   0.15     79     245     1.0      2      2    0.0000   0.0018
+   0.20     99     225     1.0      2      2    0.0000   0.0018
+   0.30    158     166     1.0      2      2    0.0000   0.0018
+
+size columns are node counts; w columns sum the solver's own memory units.
