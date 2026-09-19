@@ -12,10 +12,15 @@ disappear entirely and the gap between the objective and the simulated peak is
 around 10%.
 
 Measuring against a real allocator changed the picture again. On llama the
-measured peak is not monotonic in the memory budget: it bottoms out around 0.15
-and rises sharply below that, reaching 45% *above* no checkpointing at all at
-budget 0.05. PyTorch's own backward-memory simulator does not predict this.
-BERT, measured identically, is monotonic throughout.
+measured peak is not monotonic in the memory budget: it bottoms out at 0.15 and
+rises sharply below that, reaching 44.8% *above* the peak with no
+knapsack-selected rematerialization at all. The cause is measurable in the
+plans: at budget 0.05 producing a single node requires up to 65 other
+activations to be live at once, against 2 at budget 0.15, and the knapsack
+weighs each item by its own tensor size alone. PyTorch's own backward-memory
+simulator does not predict the effect; in that budget range its ranking is
+uncorrelated with the allocator. BERT, measured identically, is monotonic
+throughout and its recomputation closures never exceed 4 nodes.
 
 Three bugs turned up along the way. Two are upstream in PyTorch, filed as
 [pytorch/pytorch#196512](https://github.com/pytorch/pytorch/issues/196512) and
@@ -46,8 +51,12 @@ Both come from PyTorch's own `KnapsackEvaluator`. The second is never exercised
 by PyTorch's evaluation path, since
 `evaluate_distribution_of_results_for_knapsack_algo` doesn't pass the flag.
 
-Everything runs on CPU. `torch.compile` traces and partitions without executing a
-kernel.
+The sweeps above trace and partition without executing a kernel, so they run on
+CPU. `experiments/measured_backward/` does execute, and needs CUDA. The set of
+recomputable candidate nodes is not device-independent: llama at scale 8 yields
+324 candidates on CUDA and 292 on CPU, while bert yields 354 on both. Anything
+comparing a simulated figure against a measured one has to produce both on the
+same device.
 
 ## Setup
 
@@ -72,6 +81,13 @@ python scripts/inspect_cell.py --outdir out
 
 # refresh the README results section and figure from the raw output
 python scripts/update_readme.py
+
+# measured backward peak vs. the simulated schedules (needs CUDA)
+python -m experiments.measured_backward.run_d --probe --model llama
+python -m experiments.measured_backward.run_d --model llama --scale 8
+
+# how much must be live to recompute one node, per plan
+python -m experiments.recompute_closure.run_closure --model llama --scale 8 --device cuda
 ```
 
 Runs re-exec themselves with `PYTHONHASHSEED=0` and pin the simulated backward
@@ -237,15 +253,54 @@ appear on either transformer.
 bert is monotonic in the budget across 0.05 to 0.80 and does not exceed its own
 no-solver-call measurement of 2394.8 MB at budget 0.90.
 
-At budget 0.05 the partitioner saves 20 of 324 candidate nodes on llama and 71
-of 354 on bert. Why the two models' measured curves differ is not established
-here.
+### What has to be live to recompute one node
+
+Producing a recomputed node during backward requires every predecessor that is
+not itself saved; each of those requires its own unsaved predecessors, and so
+on. The closure of that walk is the set of activations that must exist
+simultaneously. The knapsack weighs each item by its own tensor size, so the
+size of this closure does not enter the objective.
+
+`experiments/recompute_closure/` computes it for the plan the partitioner
+actually chose, on the same device and therefore the same candidate graph as the
+measurement above. llama scale 8, CUDA, over the recomputed nodes in each plan:
+
+| budget | saved | recomputed | p90 | max | max closure weight |
+|---|---|---|---|---|---|
+| 0.05 | 27 | 297 | 35 | 65 | 0.1375 |
+| 0.10 | 54 | 270 | 6 | 6 | 0.0134 |
+| 0.15 | 79 | 245 | 2 | 2 | 0.0018 |
+| 0.20 | 99 | 225 | 2 | 2 | 0.0018 |
+| 0.30 | 158 | 166 | 2 | 2 | 0.0018 |
+
+Sizes are node counts; weight sums the solver's own memory units over the
+closure.
+
+The distribution is flat from 0.30 down to 0.15 and then breaks twice. At 0.10
+the maximum closure goes from 2 nodes to 6 and its weight rises 7.4x. At 0.05 it
+goes to 65 nodes and the weight rises a further 10.3x, 76x the value at 0.15.
+Those are the same two budgets at which the measured peak turns: 274.8 MB at
+0.15, 508.2 at 0.10, 1145.4 at 0.05.
+
+bert, same device and scale, does not break at any budget: maximum closure 4
+nodes at 0.05, falling to 1 at 0.30, with the closure weight decreasing
+monotonically from 0.0115 to 0.0095.
+
+The saved counts alone do not explain the difference. At budget 0.05 llama saves
+27 of 324 candidates and bert 71 of 354, a factor of 2.4 in saved fraction,
+against a factor of 16 in maximum closure size.
 
 PyTorch's documentation of the memory budget notes that the estimate accounts
 for activation memory and not for memory used during recomputation. What this
 section adds is the measured shape, the budget at which the measured minimum
-occurs, the comparison against the no-rematerialization figure, and the
-difference between the two architectures.
+occurs, the comparison against the no-rematerialization figure, the closure
+sizes that account for it, and the difference between the two architectures.
+
+It also rules out the obvious remedy. `account_for_backward_pass=True` exists to
+model exactly this cost, and in the budget range where the effect appears its
+ranking correlates with the allocator at rho between -0.036 and -0.100. Enabling
+it would replace an objective that ignores recomputation liveness with one that
+ranks it wrongly.
 
 Scope: `aot_eager` only, one GPU, batch 2, two architectures, and models built
 from config with random weights rather than checkpoints. Whether the same shape
@@ -270,11 +325,15 @@ the graph structure can be compared directly against the peak. Run it with
 `python docs/repro_knapsack_evaluator_nondeterminism.py`; it exits non-zero if
 the peaks disagree. Writeup and the second, unfiled issue: `docs/UPSTREAM_BUG.md`.
 
-A second, deeper question is described there but not yet filed: peak memory is
-schedule-dependent, and the evaluator picks a schedule it never defines. On the
-same graph and saved-node set, `nx.topological_sort` gave 0.8387 and
-`lexicographical_topological_sort` gave 0.3548. Both are valid orders. Settling
-that needs a comparison against a measured backward pass.
+A second question is described there and remains unfiled: peak memory is
+schedule-dependent, and the evaluator picks a schedule it never defines. On one
+synthetic graph and saved-node set, `nx.topological_sort` gave 0.8387 and
+`lexicographical_topological_sort` gave 0.3548; across the synthetic families
+the spread reaches 175%. `experiments/measured_backward/` was built to settle
+which schedule to prefer. It did not, because on llama and bert all three
+schedules return identical values at every budget. The schedule spread is a
+property of the synthetic families, not of either transformer measured here, so
+there is nothing to file yet.
 
 **Upstream, filed.** Saved-node accounting in
 `_get_backward_memory_from_topologically_sorted_graph`. The initial
@@ -305,13 +364,18 @@ quietly corrected, because the corrected numbers are the point.
 - **ViT captures zero knapsack instances.** It compiles, but the partitioner
   never reaches the solver. If real vision models never hit this path, that is a
   scope limit rather than a bug.
-- **Scale untested.** Only 4-layer models, n up to 48. Whether heterogeneity
-  keeps rising with depth is unmeasured. 
-- **Why llama and BERT differ is unexplained.** The chain-length hypothesis
-  above is untested. Counting live unsaved predecessors per recomputed node in
-  the actual plans would confirm or kill it.
+- **Scale untested for the sweeps.** The `out/` and `out_hf/` sweeps use 4-layer
+  models, n up to 48. The measured runs go to n = 354, but only on two
+  architectures.
+- **The candidate set is device-dependent.** llama scale 8 yields 324
+  recomputable nodes on CUDA and 292 on CPU, with different plans at every
+  budget; bert yields 354 on both. Why is unknown, and it means a CPU-only audit
+  of this path is not measuring the graph a GPU run would.
 - **`aot_eager` backend only.** Fusion under `inductor` changes which nodes are
   recomputable, and may remove the effect entirely. Untested.
+- **One GPU, batch 2, random weights.** Whether the closure cliff appears at
+  realistic batch sizes, on other architectures, or on other hardware is not
+  measured.
 
 ## Layout
 
@@ -333,6 +397,8 @@ experiments/
 ├── measured_backward/
 │   └── run_d.py           real CUDA backward vs. the simulated schedules;
 │                          --probe finds the largest scale that fits
+├── recompute_closure/
+│   └── run_closure.py     unsaved activations required per recomputed node
 ├── schedule_sensitivity/  A/B/C schedule sweep across graph families
 │   ├── run_schedules.py   entry point, writes results/schedule_sensitivity/
 │   ├── schedules.py       comparer that re-scores one plan under each schedule
@@ -347,6 +413,7 @@ out/                  synthetic sweep data, four graphs; report.txt + per-graph 
 out_hf/               llama and bert sweep data; report.txt + per-model JSON
 results/
 ├── measured_backward/     six runs of JSON + report; see its README
+├── recompute_closure/     closure distributions per plan, cpu and cuda
 └── schedule_sensitivity/  schedule_report.txt
 docs/
 ├── UPSTREAM_BUG.md  the nondeterminism and schedule-choice issues
