@@ -11,6 +11,12 @@ Once the harness computes item runtimes correctly, ties between solvers
 disappear entirely and the gap between the objective and the simulated peak is
 around 10%.
 
+Measuring against a real allocator changed the picture again. On llama the
+measured peak is not monotonic in the memory budget: it bottoms out around 0.15
+and rises sharply below that, reaching 45% *above* no checkpointing at all at
+budget 0.05. PyTorch's own backward-memory simulator does not predict this.
+BERT, measured identically, is monotonic throughout.
+
 Three bugs turned up along the way. Two are upstream in PyTorch, filed as
 [pytorch/pytorch#196512](https://github.com/pytorch/pytorch/issues/196512) and
 [pytorch/pytorch#196914](https://github.com/pytorch/pytorch/issues/196914). The
@@ -169,6 +175,82 @@ n = 100 on 64 GB, four to five orders of magnitude above what this pipeline
 produces. At realistic scale the new solver is 2 to 3x *slower* than
 `dp_knapsack`, not 25 to 28% faster; see the solver table above.
 
+## Measured backward peak
+
+Every peak above is simulated. `KnapsackEvaluator` linearises the joint graph
+into one of many valid topological orders and reports what a backward pass would
+use under that order. `experiments/measured_backward/` measures instead: it lets
+the partitioner pick a plan as it normally would at each budget, records that
+plan, executes a real forward and backward on CUDA, and reads
+`torch.cuda.max_memory_allocated()`. The same plan is then scored under
+schedules A, B and C.
+
+torch 2.14.0+cu130, GTX 1650 (4 GB, not attached to a display), batch 2, five
+identical repetitions per cell. Within a run the five readings are identical on
+every llama cell. Across separate runs of the same budget the observed
+difference is up to 0.5 MB; the two runs of the identical 9-budget
+configuration in `coarse/` and `coarse_rerun/` are identical at every budget.
+
+Simulated peaks are normalised fractions of a graph-local maximum and the
+measured column is bytes, so only shape across budgets and ranking are
+comparable.
+
+llama, measured peak minus resident baseline, MB:
+
+| budget | saved (of 324, scale 8) | scale 4 | scale 6 | scale 8 |
+|---|---|---|---|---|
+| 0.05 | 20 | 288.1 | 661.6 | 1145.4 |
+| 0.10 | 41 | 123.0 | 292.3 | 508.2 |
+| 0.15 | 59 | 80.5 | 167.1 | 274.8 |
+| 0.20 | 73 | 92.1 | 197.5 | 325.2 |
+| 0.30 | 124 | 115.9 | 240.1 | 411.1 |
+| 0.70 to 0.90 | 0 | not run | not run | 791.0 |
+
+The lowest measured value is at budget 0.15 at all three scales. The ratio from
+that value to the value at budget 0.05 is 3.58x at scale 4, 3.96x at scale 6 and
+4.17x at scale 8.
+
+At scale 8, budgets 0.70, 0.80 and 0.90 report zero candidate items and no
+solver call. That is the early return in `choose_saved_values_set` when min-cut
+saves no more than the inputs, the scope condition described in
+`docs/UPSTREAM_BUG.md`. Those cells measure 791.0 MB, which is the peak with no
+knapsack-selected rematerialization. Budget 0.05 measures 1145.4 MB, 44.8% above
+that figure.
+
+**Rank correlation with the measured curve.** Spearman rho, over the budgets in
+each run:
+
+| run | proxy | default | lexicographic | fx_order |
+|---|---|---|---|---|
+| llama scale 8, 0.10 to 0.60 | +0.829 | +0.829 | +0.829 | +0.829 |
+| llama scale 8, 0.05 to 0.35 | -0.286 | -0.036 | -0.036 | -0.036 |
+| llama scale 6, 0.05 to 0.30 | -0.600 | -0.100 | -0.100 | -0.100 |
+| llama scale 4, 0.05 to 0.30 | -0.600 | -0.100 | -0.100 | -0.100 |
+| bert scale 8, 0.05 to 0.60 | +1.000 | +1.000 | +1.000 | +1.000 |
+
+The three schedules produce identical simulated values at every budget on both
+models, so the disagreement between simulation and measurement here is not a
+consequence of which schedule the simulator picks. The A/B/C spread of up to
+175% reported for the synthetic families in `docs/UPSTREAM_BUG.md` does not
+appear on either transformer.
+
+bert is monotonic in the budget across 0.05 to 0.80 and does not exceed its own
+no-solver-call measurement of 2394.8 MB at budget 0.90.
+
+At budget 0.05 the partitioner saves 20 of 324 candidate nodes on llama and 71
+of 354 on bert. Why the two models' measured curves differ is not established
+here.
+
+PyTorch's documentation of the memory budget notes that the estimate accounts
+for activation memory and not for memory used during recomputation. What this
+section adds is the measured shape, the budget at which the measured minimum
+occurs, the comparison against the no-rematerialization figure, and the
+difference between the two architectures.
+
+Scope: `aot_eager` only, one GPU, batch 2, two architectures, and models built
+from config with random weights rather than checkpoints. Whether the same shape
+appears under `inductor`, at other batch sizes, or on other architectures is
+not measured.
 
 ## Bugs found
 
@@ -224,12 +306,12 @@ quietly corrected, because the corrected numbers are the point.
   never reaches the solver. If real vision models never hit this path, that is a
   scope limit rather than a bug.
 - **Scale untested.** Only 4-layer models, n up to 48. Whether heterogeneity
-  keeps rising with depth is unmeasured.
-- **"True peak" is a simulation**, not a measured allocator high-water mark.
-  Validating against `torch.cuda.max_memory_allocated()` is the one step that
-  needs a GPU, and it decides whether any of this corresponds to reality.
+  keeps rising with depth is unmeasured. 
+- **Why llama and BERT differ is unexplained.** The chain-length hypothesis
+  above is untested. Counting live unsaved predecessors per recomputed node in
+  the actual plans would confirm or kill it.
 - **`aot_eager` backend only.** Fusion under `inductor` changes which nodes are
-  recomputable.
+  recomputable, and may remove the effect entirely. Untested.
 
 ## Layout
 
@@ -248,16 +330,26 @@ scripts/
 ├── update_readme.py regenerates the Results section and figure from out/
 └── inspect_cell.py  dump tied plans for one (graph, budget) cell
 experiments/
+├── measured_backward/
+│   └── run_d.py           real CUDA backward vs. the simulated schedules;
+│                          --probe finds the largest scale that fits
 ├── schedule_sensitivity/  A/B/C schedule sweep across graph families
 │   ├── run_schedules.py   entry point, writes results/schedule_sensitivity/
 │   ├── schedules.py       comparer that re-scores one plan under each schedule
 │   └── graph_families.py  chain/fork/join/nested/wide/deep_narrow builders
 └── backward_memory_accounting/
     └── saved_node_recomputation.py  falsification harness for #196914
+tests/
+├── test_audit.py     capture, solver registry, capacity ceiling
+├── test_analyze.py   summary statistics and tie-set diagnostics
+└── test_schedule.py  guards that the evaluator still calls topological_sort
+out/                  synthetic sweep data, four graphs; report.txt + per-graph JSON
+out_hf/               llama and bert sweep data; report.txt + per-model JSON
 results/
-└── schedule_sensitivity/  schedule_report.txt and schedules.json
+├── measured_backward/     six runs of JSON + report; see its README
+└── schedule_sensitivity/  schedule_report.txt
 docs/
-├── UPSTREAM_BUG.md  writeup of both upstream issues
+├── UPSTREAM_BUG.md  the nondeterminism and schedule-choice issues
 ├── repro_knapsack_evaluator_nondeterminism.py         standalone repro for #196512
 ├── repro_knapsack_evaluator_saved_predecessor.py      standalone repro for #196914
 └── figures/         regenerated by update_readme.py
