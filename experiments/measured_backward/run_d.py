@@ -64,6 +64,8 @@ class Cell:
     torch_version: str
     device_name: str
 
+    eager: bool = False
+    eager: bool = False
     n_items: int = 0
     n_saved: int = 0
     n_recomputed: int = 0
@@ -144,7 +146,9 @@ class MeasuringSolver(CustomKnapsackSolver):
                         recomputable_node_idxs=recomputed,
                         account_for_backward_pass=True,
                     )["peak_memory"]
-        except Exception as exc:  # noqa: BLE001 -- a failed simulation must not stop the measurement
+        except (
+            Exception
+        ) as exc:  # noqa: BLE001 -- a failed simulation must not stop the measurement
             c.simulate_error = f"{type(exc).__name__}: {exc}"
 
         return saved, recomputed
@@ -153,13 +157,21 @@ class MeasuringSolver(CustomKnapsackSolver):
         return None  # never cache-hit past; we want a solver call per compile
 
 
-def measure(model_name: str, budget: float, scale: int, reps: int, device: str) -> Cell:
+def measure(
+    model_name: str,
+    budget: float,
+    scale: int,
+    reps: int,
+    device: str,
+    eager: bool = False,
+) -> Cell:
     cell = Cell(
         model=model_name,
         budget=budget,
         scale=scale,
         torch_version=torch.__version__,
         device_name=torch.cuda.get_device_name(0),
+        eager=eager,
     )
 
     build, make_inputs = _resolve(model_name, scale=scale)
@@ -178,12 +190,21 @@ def measure(model_name: str, budget: float, scale: int, reps: int, device: str) 
         torch._dynamo.reset()
         torch.cuda.empty_cache()
 
-        with recorder:
-            compiled = torch.compile(model, backend="aot_eager", dynamic=False)
-            # Warmup. Compiles forward, and the backward graph lazily on .backward().
-            # The solver runs here, so the plan is fixed before anything is measured.
+        if eager:
+            # No compilation, no partitioner, no knapsack. The config comment for
+            # activation_memory_budget states the partitioner "should always use
+            # less memory than eager", so this is the figure that claim refers to.
+            compiled = model
             compiled(*args).backward()
             torch.cuda.synchronize()
+        else:
+            with recorder:
+                compiled = torch.compile(model, backend="aot_eager", dynamic=False)
+                # Warmup. Compiles forward, and the backward graph lazily on
+                # .backward(). The solver runs here, so the plan is fixed before
+                # anything is measured.
+                compiled(*args).backward()
+                torch.cuda.synchronize()
 
         # Leave gradient buffers allocated and zero them in place, so what varies
         # across budgets is activation memory rather than one-off grad allocation.
@@ -199,7 +220,9 @@ def measure(model_name: str, budget: float, scale: int, reps: int, device: str) 
             cell.measured_peaks.append(torch.cuda.max_memory_allocated())
             model.zero_grad(set_to_none=False)
 
-    except Exception as exc:  # noqa: BLE001 -- record OOM and compile failures, keep sweeping
+    except (
+        Exception
+    ) as exc:  # noqa: BLE001 -- record OOM and compile failures, keep sweeping
         cell.measure_error = f"{type(exc).__name__}: {exc}"
     finally:
         functorch_config.activation_memory_budget_solver = prev_solver
@@ -213,7 +236,9 @@ def measure(model_name: str, budget: float, scale: int, reps: int, device: str) 
 def probe(model_name: str, device: str, max_scale: int = 12) -> None:
     """Find the largest scale that fits, and whether the signal clears the noise."""
     print(f"probing {model_name} on {torch.cuda.get_device_name(0)}")
-    print(f"{'scale':>6} {'n':>4} {'resident MB':>12} {'peak MB':>10} {'activation MB':>14} {'noise KB':>9}")
+    print(
+        f"{'scale':>6} {'n':>4} {'resident MB':>12} {'peak MB':>10} {'activation MB':>14} {'noise KB':>9}"
+    )
     for scale in range(1, max_scale + 1):
         c = measure(model_name, budget=0.5, scale=scale, reps=3, device=device)
         if c.measure_error:
@@ -228,7 +253,11 @@ def probe(model_name: str, device: str, max_scale: int = 12) -> None:
 
 def report(cells: list[Cell]) -> str:
     out: list[str] = []
-    ok = [c for c in cells if c.measured_peaks and c.solver_called and not c.simulate_error]
+    ok = [
+        c
+        for c in cells
+        if c.measured_peaks and c.solver_called and not c.simulate_error
+    ]
     if not ok:
         return "no usable cells; check errors in results.json\n"
 
@@ -241,11 +270,17 @@ def report(cells: list[Cell]) -> str:
     out.append("")
 
     noise = max(c.noise for c in ok)
-    out.append(f"noise floor (max spread over {len(ok[0].measured_peaks)} identical reps): {noise / 1e3:.1f} KB")
-    span = max(c.measured_activation for c in ok) - min(c.measured_activation for c in ok)
+    out.append(
+        f"noise floor (max spread over {len(ok[0].measured_peaks)} identical reps): {noise / 1e3:.1f} KB"
+    )
+    span = max(c.measured_activation for c in ok) - min(
+        c.measured_activation for c in ok
+    )
     out.append(f"measured activation span across budgets: {span / 1e6:.1f} MB")
     if span <= noise * 3:
-        out.append("  WARNING: span is not clearly above the noise floor. Scale up before")
+        out.append(
+            "  WARNING: span is not clearly above the noise floor. Scale up before"
+        )
         out.append("  drawing any conclusion from these numbers.")
     out.append("")
 
@@ -268,15 +303,22 @@ def report(cells: list[Cell]) -> str:
         if mode == "proxy":
             sim = [c.proxy_peak for c in sorted(ok, key=lambda c: c.budget)]
         else:
-            sim = [c.simulated.get(mode, float("nan")) for c in sorted(ok, key=lambda c: c.budget)]
+            sim = [
+                c.simulated.get(mode, float("nan"))
+                for c in sorted(ok, key=lambda c: c.budget)
+            ]
         try:
             rho = _spearman(measured, sim)
             out.append(f"  {mode:<16} {rho:+.3f}")
         except Exception:  # noqa: BLE001
             out.append(f"  {mode:<16}  n/a")
     out.append("")
-    out.append("rho near +1 means that schedule orders budgets the way the allocator does.")
-    out.append("rho near 0 across all of them means the simulator tracks nothing measurable.")
+    out.append(
+        "rho near +1 means that schedule orders budgets the way the allocator does."
+    )
+    out.append(
+        "rho near 0 across all of them means the simulator tracks nothing measurable."
+    )
     return "\n".join(out) + "\n"
 
 
@@ -304,10 +346,21 @@ def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--model", default="llama")
     ap.add_argument("--scale", type=int, default=4)
-    ap.add_argument("--reps", type=int, default=5, help="identical repetitions, for the noise floor")
+    ap.add_argument(
+        "--reps", type=int, default=5, help="identical repetitions, for the noise floor"
+    )
     ap.add_argument("--budgets", type=float, nargs="*", default=DEFAULT_BUDGETS)
     ap.add_argument("--outdir", default="results/measured_backward")
-    ap.add_argument("--probe", action="store_true", help="find the largest scale that fits, then exit")
+    ap.add_argument(
+        "--probe",
+        action="store_true",
+        help="find the largest scale that fits, then exit",
+    )
+    ap.add_argument(
+        "--eager",
+        action="store_true",
+        help="measure uncompiled eager instead; budgets are ignored, one cell is produced",
+    )
     args = ap.parse_args()
 
     if not torch.cuda.is_available():
@@ -319,19 +372,25 @@ def main() -> None:
         return
 
     cells: list[Cell] = []
-    for budget in args.budgets:
-        c = measure(args.model, budget, args.scale, args.reps, device)
+    budgets = [0.0] if args.eager else args.budgets
+    for budget in budgets:
+        c = measure(args.model, budget, args.scale, args.reps, device, eager=args.eager)
         cells.append(c)
-        status = c.measure_error or c.simulate_error or f"{c.measured_activation / 1e6:.1f} MB"
+        status = (
+            c.measure_error
+            or c.simulate_error
+            or f"{c.measured_activation / 1e6:.1f} MB"
+        )
         print(f"budget {budget:.2f}  n={c.n_items:<3} saved={c.n_saved:<3} {status}")
 
     outdir = Path(args.outdir)
     outdir.mkdir(parents=True, exist_ok=True)
-    (outdir / f"{args.model}_scale{args.scale}.json").write_text(
+    stem = f"{args.model}_scale{args.scale}" + ("_eager" if args.eager else "")
+    (outdir / f"{stem}.json").write_text(
         json.dumps([asdict(c) for c in cells], indent=2)
     )
     text = report(cells)
-    (outdir / f"{args.model}_scale{args.scale}_report.txt").write_text(text)
+    (outdir / f"{stem}_report.txt").write_text(text)
     print()
     print(text)
 

@@ -15,9 +15,9 @@ Measuring against a real allocator changed the picture again. On llama the
 measured peak is not monotonic in the memory budget: it bottoms out at 0.15 and
 rises sharply below that, reaching 44.8% *above* the peak with no
 knapsack-selected rematerialization at all. The cause is measurable in the
-plans: at budget 0.05 producing a single node requires up to 65 other
-activations to be live at once, against 2 at budget 0.15, and the knapsack
-weighs each item by its own tensor size alone. PyTorch's own backward-memory
+plans: at budget 0.05 producing a single node depends on up to 65 other unsaved
+activations, against 2 at budget 0.15, and the knapsack weighs each item by its
+own tensor size alone. PyTorch's own backward-memory
 simulator does not predict the effect; in that budget range its ranking is
 uncorrelated with the allocator. BERT, measured identically, is monotonic
 throughout and its recomputation closures never exceed 4 nodes.
@@ -86,7 +86,7 @@ python scripts/update_readme.py
 python -m experiments.measured_backward.run_d --probe --model llama
 python -m experiments.measured_backward.run_d --model llama --scale 8
 
-# how much must be live to recompute one node, per plan
+# what a single recomputation depends on, per plan
 python -m experiments.recompute_closure.run_closure --model llama --scale 8 --device cuda
 ```
 
@@ -253,13 +253,19 @@ appear on either transformer.
 bert is monotonic in the budget across 0.05 to 0.80 and does not exceed its own
 no-solver-call measurement of 2394.8 MB at budget 0.90.
 
-### What has to be live to recompute one node
+### What a single recomputation depends on
 
 Producing a recomputed node during backward requires every predecessor that is
 not itself saved; each of those requires its own unsaved predecessors, and so
-on. The closure of that walk is the set of activations that must exist
-simultaneously. The knapsack weighs each item by its own tensor size, so the
-size of this closure does not enter the objective.
+on. The closure of that walk is the set of activations the recomputation
+depends on. The knapsack weighs each item by its own tensor size, so the size of
+this closure does not enter the objective.
+
+The closure is not the live set. A schedule is free to free an intermediate once
+its consumer has run, so the memory actually required lies somewhere between the
+largest single member of the closure and the sum of all of them. Both bounds are
+reported below. PyTorch's own backward simulator uses the upper one: it adds
+each recomputed predecessor and frees nothing until the node is dropped.
 
 `experiments/recompute_closure/` computes it for the plan the partitioner
 actually chose, on the same device and therefore the same candidate graph as the
