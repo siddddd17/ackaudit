@@ -288,6 +288,29 @@ appear on either transformer.
 bert is monotonic in the budget across 0.05 to 0.80 and does not exceed its own
 no-solver-call measurement of 2394.8 MB at budget 0.90.
 
+### Under inductor
+
+The sweeps above use `aot_eager`, which traces and partitions without fusing.
+Inductor fuses, which changes which nodes are recomputable: the candidate set
+goes from 324 nodes to 322. Repeating the same five budgets on the same model
+and GPU:
+
+| budget | saved (aot_eager / inductor) | aot_eager | inductor |
+|---|---|---|---|
+| 0.05 | 27 / 25 | 1145.4 | 904.1 |
+| 0.10 | 54 / 50 | 508.2 | 584.0 |
+| 0.15 | 79 / 72 | 274.8 | 383.6 |
+| 0.20 | 99 / 100 | 325.2 | 415.1 |
+| 0.30 | 158 / 151 | 411.1 | 473.7 |
+
+The minimum is at 0.15 under both backends and the curve rises below it under
+both. The ratio from the minimum to budget 0.05 is 4.17x under `aot_eager` and
+2.36x under inductor, so fusion absorbs part of the effect without removing the
+reversal. Inductor measures higher than `aot_eager` at every budget from 0.10
+up and lower at 0.05, which is why the ratio compresses.
+
+Two separate processes returned byte-identical values at every budget.
+
 ### What a single recomputation depends on
 
 Producing a recomputed node during backward requires every predecessor that is
@@ -422,8 +445,9 @@ quietly corrected, because the corrected numbers are the point.
   recomputable nodes on CUDA and 292 on CPU, with different plans at every
   budget; bert yields 354 on both. Why is unknown, and it means a CPU-only audit
   of this path is not measuring the graph a GPU run would.
-- **`aot_eager` backend only.** Fusion under `inductor` changes which nodes are
-  recomputable, and may remove the effect entirely. Untested.
+- **Only llama has been measured under inductor.** The five-budget sweep
+  reproduces there with the minimum at the same budget; bert, the other scales,
+  and the endpoints have not been repeated under inductor.
 - **One GPU, batch 2, random weights.** Whether the closure cliff appears at
   realistic batch sizes, on other architectures, or on other hardware is not
   measured.
