@@ -14,10 +14,11 @@ around 10%.
 Measuring against a real allocator changed the picture again. On llama the
 measured peak is not monotonic in the memory budget: it bottoms out at 0.15 and
 rises sharply below that, reaching 44.8% *above* the peak with no
-knapsack-selected rematerialization at all. The cause is measurable in the
-plans: at budget 0.05 producing a single node depends on up to 65 other unsaved
-activations, against 2 at budget 0.15, and the knapsack weighs each item by its
-own tensor size alone. PyTorch's own backward-memory
+knapsack-selected rematerialization at all. The plans in that region look
+different: at budget 0.05 a single recomputation depends on up to 65 other
+unsaved activations, against 2 at budget 0.15, and the knapsack weighs each item
+by its own tensor size alone. What that costs depends on the execution schedule
+and is not established here. PyTorch's own backward-memory
 simulator does not predict the effect; in that budget range its ranking is
 uncorrelated with the allocator. BERT, measured identically, is monotonic
 throughout and its recomputation closures never exceed 4 nodes.
@@ -271,26 +272,36 @@ each recomputed predecessor and frees nothing until the node is dropped.
 actually chose, on the same device and therefore the same candidate graph as the
 measurement above. llama scale 8, CUDA, over the recomputed nodes in each plan:
 
-| budget | saved | recomputed | p90 | max | max closure weight |
-|---|---|---|---|---|---|
-| 0.05 | 27 | 297 | 35 | 65 | 0.1375 |
-| 0.10 | 54 | 270 | 6 | 6 | 0.0134 |
-| 0.15 | 79 | 245 | 2 | 2 | 0.0018 |
-| 0.20 | 99 | 225 | 2 | 2 | 0.0018 |
-| 0.30 | 158 | 166 | 2 | 2 | 0.0018 |
+| budget | saved | recomputed | p90 | max | largest member | closure sum |
+|---|---|---|---|---|---|---|
+| 0.05 | 27 | 297 | 35 | 65 | 0.0049 | 0.1375 |
+| 0.10 | 54 | 270 | 6 | 6 | 0.0049 | 0.0134 |
+| 0.15 | 79 | 245 | 2 | 2 | 0.0018 | 0.0018 |
+| 0.20 | 99 | 225 | 2 | 2 | 0.0018 | 0.0018 |
+| 0.30 | 158 | 166 | 2 | 2 | 0.0018 | 0.0018 |
 
-Sizes are node counts; weight sums the solver's own memory units over the
-closure.
+Sizes are node counts. The last two columns are the bounds: the largest single
+member of the closure, which has to be materialised at some point whatever the
+schedule, and the sum of all members, which is what PyTorch's own backward
+simulator assumes.
 
-The distribution is flat from 0.30 down to 0.15 and then breaks twice. At 0.10
-the maximum closure goes from 2 nodes to 6 and its weight rises 7.4x. At 0.05 it
-goes to 65 nodes and the weight rises a further 10.3x, 76x the value at 0.15.
-Those are the same two budgets at which the measured peak turns: 274.8 MB at
-0.15, 508.2 at 0.10, 1145.4 at 0.05.
+The two bounds disagree about what happens. The closure count breaks twice, at
+0.10 and again at 0.05, matching the two budgets at which the measured peak
+turns: 274.8 MB at 0.15, 508.2 at 0.10, 1145.4 at 0.05. The sum follows the same
+shape, rising 7.4x and then a further 10.3x, 76x in total. The largest single
+member does not: it rises 2.7x from 0.15 to 0.10 and then stays flat across the
+budget where the measured peak doubles.
 
-bert, same device and scale, does not break at any budget: maximum closure 4
-nodes at 0.05, falling to 1 at 0.30, with the closure weight decreasing
-monotonically from 0.0115 to 0.0095.
+So the measured curve tracks the upper bound and not the lower one. A schedule
+that frees each dependency once its consumer has run would make 65 small
+activations cost little more than 2; the measurement says something closer to
+the opposite is happening. That is consistent with the executor materialising
+much of the closure rather than freeing eagerly, but it is inference from two
+curves. No liveness trace was taken, so the mechanism is not established.
+
+bert, same device and scale, does not break on either bound: maximum closure 4
+nodes at 0.05 falling to 1 at 0.30, largest member flat at 0.0095, sum flat at
+0.0115 falling to 0.0095.
 
 The saved counts alone do not explain the difference. At budget 0.05 llama saves
 27 of 324 candidates and bert 71 of 354, a factor of 2.4 in saved fraction,
@@ -382,6 +393,11 @@ quietly corrected, because the corrected numbers are the point.
 - **One GPU, batch 2, random weights.** Whether the closure cliff appears at
   realistic batch sizes, on other architectures, or on other hardware is not
   measured.
+- **The mechanism is not established.** The measured peak tracks the closure sum
+  rather than the largest closure member, which suggests dependencies are not
+  freed eagerly during recomputation, but no allocator-level liveness trace was
+  taken. Snapshotting resident tensors during the backward at budgets 0.05 and
+  0.15 would settle it.
 
 ## Layout
 
