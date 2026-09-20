@@ -13,8 +13,8 @@ around 10%.
 
 Measuring against a real allocator changed the picture again. On llama the
 measured peak is not monotonic in the memory budget: it bottoms out at 0.15 and
-rises sharply below that, reaching 44.8% *above* the peak with no
-knapsack-selected rematerialization at all. The plans in that region look
+rises sharply below that. Budget 0.05 measures 4.17x the peak at 0.15, from
+asking for less memory rather than more. The plans in that region look
 different: at budget 0.05 a single recomputation depends on up to 65 other
 unsaved activations, against 2 at budget 0.15, and the knapsack weighs each item
 by its own tensor size alone. What that costs depends on the execution schedule
@@ -222,6 +222,9 @@ llama, measured peak minus resident baseline, MB:
 | 0.20 | 73 | 92.1 | 197.5 | 325.2 |
 | 0.30 | 124 | 115.9 | 240.1 | 411.1 |
 | 0.70 to 0.90 | 0 | not run | not run | 791.0 |
+| 1.00 | 0 | not run | not run | 1114.3 |
+| 0.00 | 0 | not run | not run | 1431.3 |
+| eager, no compile | - | not run | not run | 1421.2 |
 
 The lowest measured value is at budget 0.15 at all three scales. The ratio from
 that value to the value at budget 0.05 is 3.58x at scale 4, 3.96x at scale 6 and
@@ -230,9 +233,22 @@ that value to the value at budget 0.05 is 3.58x at scale 4, 3.96x at scale 6 and
 At scale 8, budgets 0.70, 0.80 and 0.90 report zero candidate items and no
 solver call. That is the early return in `choose_saved_values_set` when min-cut
 saves no more than the inputs, the scope condition described in
-`docs/UPSTREAM_BUG.md`. Those cells measure 791.0 MB, which is the peak with no
-knapsack-selected rematerialization. Budget 0.05 measures 1145.4 MB, 44.8% above
-that figure.
+`docs/UPSTREAM_BUG.md`, and it also applies at both documented endpoints: 0.00,
+1.00 and every budget from 0.70 up report no solver call.
+
+The endpoints do not bound the curve. `config.py` describes 0.0 as the
+activation memory of full activation checkpointing and 1.0 as that of the
+default runtime-optimized strategy, but measured, 0.00 is the highest figure
+recorded here at 1431.3 MB and 1.00 is 1114.3 MB. Budget 0.15 measures 274.8 MB,
+75.3% below the 1.00 endpoint, and budget 0.05 measures 1145.4 MB, 2.8% above
+it. So the pathology is a comparison between budgets inside the range, not a
+comparison against either endpoint.
+
+The config comment states the partitioner "should always use less memory than
+eager". Measured eager is 1421.2 MB, above every compiled budget including 0.05,
+so that expectation holds throughout. Budget 0.00 at 1431.3 MB is 0.7% above
+eager, the only figure that approaches it, and it reports no solver call, so
+whatever it does is not the knapsack path.
 
 **Rank correlation with the measured curve.** Spearman rho, over the budgets in
 each run:
@@ -398,6 +414,11 @@ quietly corrected, because the corrected numbers are the point.
   freed eagerly during recomputation, but no allocator-level liveness trace was
   taken. Snapshotting resident tensors during the backward at budgets 0.05 and
   0.15 would settle it.
+- **Budget 0.00 does not behave as documented.** `config.py` describes it as the
+  activation memory of full activation checkpointing, which should be the
+  minimum. Measured it is the maximum of every configuration tested, 1431.3 MB,
+  and it reports no solver call. Whether it short-circuits before reaching the
+  intended path was not investigated.
 
 ## Layout
 
