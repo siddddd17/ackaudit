@@ -65,7 +65,7 @@ class Cell:
     device_name: str
 
     eager: bool = False
-    eager: bool = False
+    backend: str = "aot_eager"
     n_items: int = 0
     n_saved: int = 0
     n_recomputed: int = 0
@@ -156,7 +156,6 @@ class MeasuringSolver(CustomKnapsackSolver):
     def uuid(self) -> Any:
         return None  # never cache-hit past; we want a solver call per compile
 
-
 def measure(
     model_name: str,
     budget: float,
@@ -164,6 +163,7 @@ def measure(
     reps: int,
     device: str,
     eager: bool = False,
+    backend: str = "aot_eager",
 ) -> Cell:
     cell = Cell(
         model=model_name,
@@ -172,6 +172,7 @@ def measure(
         torch_version=torch.__version__,
         device_name=torch.cuda.get_device_name(0),
         eager=eager,
+        backend=backend,
     )
 
     build, make_inputs = _resolve(model_name, scale=scale)
@@ -199,7 +200,7 @@ def measure(
             torch.cuda.synchronize()
         else:
             with recorder:
-                compiled = torch.compile(model, backend="aot_eager", dynamic=False)
+                compiled = torch.compile(model, backend=backend, dynamic=False)
                 # Warmup. Compiles forward, and the backward graph lazily on
                 # .backward(). The solver runs here, so the plan is fixed before
                 # anything is measured.
@@ -361,6 +362,7 @@ def main() -> None:
         action="store_true",
         help="measure uncompiled eager instead; budgets are ignored, one cell is produced",
     )
+    ap.add_argument("--backend", default="aot_eager", help="torch.compile backend")
     args = ap.parse_args()
 
     if not torch.cuda.is_available():
@@ -374,7 +376,10 @@ def main() -> None:
     cells: list[Cell] = []
     budgets = [0.0] if args.eager else args.budgets
     for budget in budgets:
-        c = measure(args.model, budget, args.scale, args.reps, device, eager=args.eager)
+        c = measure(
+            args.model, budget, args.scale, args.reps, device,
+            eager=args.eager, backend=args.backend,
+        )
         cells.append(c)
         status = (
             c.measure_error
@@ -385,7 +390,11 @@ def main() -> None:
 
     outdir = Path(args.outdir)
     outdir.mkdir(parents=True, exist_ok=True)
-    stem = f"{args.model}_scale{args.scale}" + ("_eager" if args.eager else "")
+    stem = f"{args.model}_scale{args.scale}"
+    if args.backend != "aot_eager":
+        stem += f"_{args.backend}"
+    if args.eager:
+        stem += "_eager"
     (outdir / f"{stem}.json").write_text(
         json.dumps([asdict(c) for c in cells], indent=2)
     )
