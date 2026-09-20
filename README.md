@@ -230,25 +230,43 @@ The lowest measured value is at budget 0.15 at all three scales. The ratio from
 that value to the value at budget 0.05 is 3.58x at scale 4, 3.96x at scale 6 and
 4.17x at scale 8.
 
-At scale 8, budgets 0.70, 0.80 and 0.90 report zero candidate items and no
-solver call. That is the early return in `choose_saved_values_set` when min-cut
-saves no more than the inputs, the scope condition described in
-`docs/UPSTREAM_BUG.md`, and it also applies at both documented endpoints: 0.00,
-1.00 and every budget from 0.70 up report no solver call.
+Three different code paths in `choose_saved_values_set` report zero candidate
+items, and they are not the same thing.
 
-The endpoints do not bound the curve. `config.py` describes 0.0 as the
-activation memory of full activation checkpointing and 1.0 as that of the
-default runtime-optimized strategy, but measured, 0.00 is the highest figure
-recorded here at 1431.3 MB and 1.00 is 1114.3 MB. Budget 0.15 measures 274.8 MB,
-75.3% below the 1.00 endpoint, and budget 0.05 measures 1145.4 MB, 2.8% above
-it. So the pathology is a comparison between budgets inside the range, not a
-comparison against either endpoint.
+Budget 0.00 returns `node_info.inputs` at line 3522: save only the graph inputs
+and recompute everything else. That is full activation checkpointing, the
+smallest possible saved set, exactly as `config.py` describes the endpoint.
+Budget 1.00 returns the min-cut solution at line 3531. Budgets 0.70 to 0.90 hit
+the later `max_act_size <= min_act_size` return, where min-cut already saves no
+more than the inputs, which is the scope condition described in
+`docs/UPSTREAM_BUG.md`.
+
+Measured, those three give 1431.3 MB, 1114.3 MB and 791.0 MB. The documented
+full-checkpointing endpoint is the highest figure recorded anywhere in this
+repository, and the runtime-optimized endpoint is 28.4% below it.
+
+That places the endpoints inside the pattern rather than outside it. Ordering
+the llama scale 8 measurements by the size of the saved set:
+
+| saved set | budget | measured |
+|---|---|---|
+| inputs only | 0.00 | 1431.3 |
+| 27 of 324 | 0.05 | 1145.4 |
+| 54 | 0.10 | 508.2 |
+| 79 | 0.15 | 274.8 |
+| 99 | 0.20 | 325.2 |
+| 158 | 0.30 | 411.1 |
+| 242 | 0.60 | 738.1 |
+| min-cut | 1.00 | 1114.3 |
+
+From 0.00 to 0.15, saving more activations reduces measured peak memory by a
+factor of 5.2. The knapsack is being asked to save fewer bytes and is doing so
+correctly, and the result costs more memory, with the documented
+full-checkpointing endpoint as the worst case.
 
 The config comment states the partitioner "should always use less memory than
-eager". Measured eager is 1421.2 MB, above every compiled budget including 0.05,
-so that expectation holds throughout. Budget 0.00 at 1431.3 MB is 0.7% above
-eager, the only figure that approaches it, and it reports no solver call, so
-whatever it does is not the knapsack path.
+eager". Measured eager is 1421.2 MB. Every compiled budget is below it except
+0.00, which is 0.7% above, so that expectation effectively holds.
 
 **Rank correlation with the measured curve.** Spearman rho, over the budgets in
 each run:
@@ -409,16 +427,11 @@ quietly corrected, because the corrected numbers are the point.
 - **One GPU, batch 2, random weights.** Whether the closure cliff appears at
   realistic batch sizes, on other architectures, or on other hardware is not
   measured.
-- **The mechanism is not established.** The measured peak tracks the closure sum
-  rather than the largest closure member, which suggests dependencies are not
-  freed eagerly during recomputation, but no allocator-level liveness trace was
-  taken. Snapshotting resident tensors during the backward at budgets 0.05 and
-  0.15 would settle it.
-- **Budget 0.00 does not behave as documented.** `config.py` describes it as the
-  activation memory of full activation checkpointing, which should be the
-  minimum. Measured it is the maximum of every configuration tested, 1431.3 MB,
-  and it reports no solver call. Whether it short-circuits before reaching the
-  intended path was not investigated.
+- **Why saving fewer activations costs more memory is not established.** The
+  measured peak tracks the closure sum rather than the largest closure member,
+  which suggests dependencies are not freed eagerly during recomputation, but no
+  allocator-level liveness trace was taken. Snapshotting resident tensors during
+  the backward at budgets 0.00, 0.05 and 0.15 would settle it.
 
 ## Layout
 
