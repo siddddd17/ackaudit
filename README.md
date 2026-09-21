@@ -14,14 +14,20 @@ around 10%.
 Measuring against a real allocator changed the picture again. On llama the
 measured peak is not monotonic in the memory budget: it bottoms out at 0.15 and
 rises sharply below that. Budget 0.05 measures 4.17x the peak at 0.15, from
-asking for less memory rather than more. The plans in that region look
-different: at budget 0.05 a single recomputation depends on up to 65 other
-unsaved activations, against 2 at budget 0.15, and the knapsack weighs each item
-by its own tensor size alone. What that costs depends on the execution schedule
-and is not established here. PyTorch's own backward-memory
-simulator does not predict the effect; in that budget range its ranking is
-uncorrelated with the allocator. BERT, measured identically, is monotonic
-throughout and its recomputation closures never exceed 4 nodes.
+asking for less memory rather than more. Reported as
+[pytorch/pytorch#197838](https://github.com/pytorch/pytorch/issues/197838).
+PyTorch's own backward-memory simulator does not predict the effect; in that
+budget range its ranking is uncorrelated with the allocator. BERT, measured
+identically, is monotonic throughout.
+
+An allocator trace then located the extra memory, and an intervention confirmed
+what drives it. At 0.05, 721.4 MB of the tensors live at the peak are MLP
+activations recomputed during the backward, for all 32 layers at once. That plan
+saves none of the layers' MLP outputs, and the recomputed activations are
+created in an early block of the backward and held until each layer's own
+gradient. Forcing the 32 MLP outputs out of the 0.15 plan, which then saves less
+than its budget allows, raises its peak 3.96x; forcing them into the 0.05 plan
+cuts its peak by 72.8%. See [What is live at the peak](#what-is-live-at-the-peak).
 
 Three bugs turned up along the way. Two are upstream in PyTorch, filed as
 [pytorch/pytorch#196512](https://github.com/pytorch/pytorch/issues/196512) and
@@ -43,14 +49,20 @@ a documented extension point, so no fork is needed. It captures the real knapsac
 instance, runs every solver across a budget sweep, and scores each resulting plan
 two ways:
 
-| objective | how it's computed | who uses it |
+| quantity | how it's computed | what it is |
 |---|---|---|
-| **proxy** | `sum(size of saved nodes)` | what the solvers optimise |
+| **proxy** | `sum(size of saved nodes)` | what the budget constrains |
 | **true**  | simulated backward pass incl. recomputation chains | `account_for_backward_pass=True`, off by default |
 
 Both come from PyTorch's own `KnapsackEvaluator`. The second is never exercised
 by PyTorch's evaluation path, since
 `evaluate_distribution_of_results_for_knapsack_algo` doesn't pass the flag.
+
+Terminology: `dp_knapsack`, the default solver, maximizes estimated runtime
+saved, subject to the saved nodes' memory weights fitting under the budget. The
+proxy is that memory quantity, the knapsack's constraint rather than the value
+it maximizes. Where this README calls the proxy an objective, it means this
+constraint.
 
 The sweeps above trace and partition without executing a kernel, so they run on
 CPU. `experiments/measured_backward/` does execute, and needs CUDA. The set of
@@ -89,6 +101,11 @@ python -m experiments.measured_backward.run_d --model llama --scale 8
 
 # what a single recomputation depends on, per plan
 python -m experiments.recompute_closure.run_closure --model llama --scale 8 --device cuda
+
+# what is live at the backward peak (needs CUDA); every figure it feeds,
+# recomputed from committed data (no GPU)
+python -m experiments.memory_snapshot.run_snapshot --budgets 0.05 0.10 0.15
+python -m experiments.memory_snapshot.attribute
 ```
 
 Runs re-exec themselves with `PYTHONHASHSEED=0` and pin the simulated backward
@@ -317,7 +334,7 @@ Producing a recomputed node during backward requires every predecessor that is
 not itself saved; each of those requires its own unsaved predecessors, and so
 on. The closure of that walk is the set of activations the recomputation
 depends on. The knapsack weighs each item by its own tensor size, so the size of
-this closure does not enter the objective.
+this closure does not enter the memory weight the budget constrains.
 
 The closure is not the live set. A schedule is free to free an intermediate once
 its consumer has run, so the memory actually required lies somewhere between the
@@ -349,12 +366,12 @@ shape, rising 7.4x and then a further 10.3x, 76x in total. The largest single
 member does not: it rises 2.7x from 0.15 to 0.10 and then stays flat across the
 budget where the measured peak doubles.
 
-So the measured curve tracks the upper bound and not the lower one. A schedule
-that frees each dependency once its consumer has run would make 65 small
-activations cost little more than 2; the measurement says something closer to
-the opposite is happening. That is consistent with the executor materialising
-much of the closure rather than freeing eagerly, but it is inference from two
-curves. No liveness trace was taken, so the mechanism is not established.
+So the measured curve tracks the upper bound and not the lower one. This section
+originally read that as the executor not freeing dependencies eagerly. The
+allocator trace in [What is live at the peak](#what-is-live-at-the-peak) shows
+that reading was wrong: the generated code does free each value at its last use.
+The memory is held because recomputed values are created early in the backward
+and their last use, their own layer's gradient, comes late.
 
 bert, same device and scale, does not break on either bound: maximum closure 4
 nodes at 0.05 falling to 1 at 0.30, largest member flat at 0.0095, sum flat at
@@ -370,16 +387,109 @@ section adds is the measured shape, the budget at which the measured minimum
 occurs, the comparison against the no-rematerialization figure, the closure
 sizes that account for it, and the difference between the two architectures.
 
-It also rules out the obvious remedy. `account_for_backward_pass=True` exists to
-model exactly this cost, and in the budget range where the effect appears its
-ranking correlates with the allocator at rho between -0.036 and -0.100. Enabling
-it would replace an objective that ignores recomputation liveness with one that
-ranks it wrongly.
+It also rules out one obvious remedy. `account_for_backward_pass=True` makes the
+in-tree evaluator simulate the backward, including recomputation, and in the
+budget range where the effect appears its ranking correlates with the allocator
+at rho between -0.036 and -0.100. It is an evaluation flag with no in-tree
+caller outside tests, not a solver setting, and as it stands it would not be a
+reliable substitute for the memory weights the budget constrains.
 
-Scope: `aot_eager` only, one GPU, batch 2, two architectures, and models built
-from config with random weights rather than checkpoints. Whether the same shape
-appears under `inductor`, at other batch sizes, or on other architectures is
-not measured.
+Scope: the closure figures are `aot_eager`, one GPU, batch 2, two
+architectures, and models built from config with random weights rather than
+checkpoints. The peak's shape reproduces under inductor (see above); closures
+under inductor, at other batch sizes, and on other architectures are not
+measured.
+
+## What is live at the peak
+
+Reported on [pytorch/pytorch#197838](https://github.com/pytorch/pytorch/issues/197838).
+`experiments/memory_snapshot/run_snapshot.py` records
+`torch.cuda.memory._record_memory_history()` around one measured forward and
+backward, same llama config as above under `aot_eager`, and replays the trace to
+find the allocations live at the peak. Recording does not change the
+measurement: each recorded peak is byte-identical to the harness median above.
+The replay matches the allocator's `requested_bytes` peak exactly;
+`max_memory_allocated()`, which all peaks here use, reads slightly higher
+because it counts rounded blocks.
+
+Every number in this section is printed, from committed data only, by
+`python -m experiments.memory_snapshot.attribute`, which needs no GPU.
+
+| budget | peak | recomputed, live at peak | of which MLP inner tensors | layers whose MLP output was not saved |
+|---|---|---|---|---|
+| 0.15 | 274.8 MB | 159.8 MB | 16.9 MB | none |
+| 0.10 | 508.2 MB | 430.5 MB | 248.0 MB | 21 to 31 |
+| 0.05 | 1145.4 MB | 1076.8 MB | 721.4 MB | all 32 |
+
+"Recomputed" means allocated during the backward by a statement with no dataflow
+from the tangent input. The MLP inner tensors are the gate and up projections,
+the SiLU and their product, 5.6 MB each: at 0.05, 64 projections, 32 SiLU
+outputs and 32 products. "MLP output" is a saved `down_proj` output, read from
+each forward graph's return statement. At the peak, the layers with a recomputed
+SiLU live are exactly those whose MLP output was not saved, at 0.05 and at 0.10;
+at 0.15 the only SiLU live is from the layer being processed at that moment.
+
+Creation to last use of each recomputed SiLU, as a share of the backward graph's
+statements:
+
+| | MLP output saved | MLP output not saved |
+|---|---|---|
+| layers 0 to 20 | 0.2% (budgets 0.10, 0.15) | 32.9% to 90.8% (0.05) |
+| layers 21 to 30 | 0.2% (0.15) | 3.6% to 30.1% (0.05, 0.10) |
+
+Early and late layers behave the same, and at 0.10 both patterns occur in one
+graph. Layer 31 is processed first, so it is recomputed just before its own
+gradient either way and is left out. Where the output is not saved, the SiLU
+outputs are created in an early block, every one before any is released, and
+each is last used by its own layer's MLP gradient. This is consistent with the
+backward's dependency closure: without a layer's MLP output, reconstructing
+later layers' inputs can pull in upstream unsaved subgraphs, whose recomputed
+values then stay live until their later uses.
+
+**Intervention.** With `--intervention`, a solver hook runs the production
+`dp_knapsack` with the partitioner's own runtime estimates, then moves only the
+32 `down_proj` outputs into or out of the saved set; the compiled forward graphs
+confirm the change. With the hook installed and the plan unedited, peaks are
+byte-identical to the unhooked runs.
+
+| plan | saved weight (budget consumed) | MLP outputs saved | peak | MLP inner tensors live |
+|---|---|---|---|---|
+| natural 0.05 | 0.0486 | 0 | 1145.4 MB | 721.4 MB |
+| 0.15, MLP outputs forced out | 0.0913 | 0 | 1087.3 MB | 710.1 MB |
+| natural 0.10 | 0.0979 | 21 | 508.2 MB | 248.0 MB |
+| 0.05, MLP outputs forced in | 0.1066 | 32 | 311.0 MB | 16.9 MB |
+| natural 0.15 | 0.1493 | 32 | 274.8 MB | 16.9 MB |
+
+Across these five plans the peak is far more sensitive to which MLP outputs are
+saved than to the saved weight. Forcing them out at 0.15 keeps the plan within
+budget and still raises the peak 3.96x. Forcing them in at 0.05 cuts the peak by
+72.8%, using 0.0580 of additional saved weight to remove 834.4 MB.
+
+**The reordering pass.** With `--no-reorder`, `reordering_to_mimic_autograd_engine`
+is replaced by the identity. It lowers the 0.15 peak by 80.8% (1433.8 MB
+without it) and the 0.05 peak by 19.8% (1427.4 MB without it). At 0.05,
+disabling it changes no recomputed SiLU's held span by more than 0.03 percentage
+points, which suggests the long lifetimes follow from the dependency structure
+rather than from the pass.
+
+**Not established.** The forced-in 0.05 plan exceeds its budget; the 32 MLP
+outputs alone weigh 0.0580. Whether some plan within 0.05 has a much lower peak,
+and what estimated runtime it gives up, is open. Everything here is `aot_eager`,
+llama at one scale.
+
+```bash
+python -m experiments.memory_snapshot.run_snapshot --budgets 0.05 0.10 0.15
+python -m experiments.memory_snapshot.run_snapshot --budgets 0.05 0.15 --no-reorder
+python -m experiments.memory_snapshot.run_snapshot --intervention none --budgets 0.05 0.15
+python -m experiments.memory_snapshot.run_snapshot --intervention save-mlp-out --budgets 0.05
+python -m experiments.memory_snapshot.run_snapshot --intervention recompute-mlp-out --budgets 0.15
+python -m experiments.memory_snapshot.lifetimes --budget 0.05
+python -m experiments.memory_snapshot.attribute
+```
+
+Full allocator snapshots are written outside the repository (`--pickle-dir`,
+default `/tmp/ackaudit_snapshots`) and can be opened at
+https://pytorch.org/memory_viz.
 
 ## Bugs found
 
@@ -451,11 +561,12 @@ quietly corrected, because the corrected numbers are the point.
 - **One GPU, batch 2, random weights.** Whether the closure cliff appears at
   realistic batch sizes, on other architectures, or on other hardware is not
   measured.
-- **Why saving fewer activations costs more memory is not established.** The
-  measured peak tracks the closure sum rather than the largest closure member,
-  which suggests dependencies are not freed eagerly during recomputation, but no
-  allocator-level liveness trace was taken. Snapshotting resident tensors during
-  the backward at budgets 0.00, 0.05 and 0.15 would settle it.
+- **The mechanism is traced for one configuration only.** The allocator trace
+  and the MLP-output intervention in
+  [What is live at the peak](#what-is-live-at-the-peak) are `aot_eager`, llama
+  at scale 8. Still open: whether a plan within the 0.05 budget avoids the peak,
+  and at what estimated runtime; the same trace under inductor; a larger llama
+  config; and budget 0.00, which was not traced.
 
 ## Layout
 
@@ -479,6 +590,10 @@ experiments/
 │                          --probe finds the largest scale that fits
 ├── recompute_closure/
 │   └── run_closure.py     unsaved activations required per recomputed node
+├── memory_snapshot/
+│   ├── run_snapshot.py    allocator trace at the backward peak; --no-reorder, --intervention
+│   ├── lifetimes.py       creation and last use of each recomputed SiLU
+│   └── attribute.py       every number in "What is live at the peak", from committed data
 ├── schedule_sensitivity/  A/B/C schedule sweep across graph families
 │   ├── run_schedules.py   entry point, writes results/schedule_sensitivity/
 │   ├── schedules.py       comparer that re-scores one plan under each schedule
@@ -492,8 +607,9 @@ tests/
 out/                  synthetic sweep data, four graphs; report.txt + per-graph JSON
 out_hf/               llama and bert sweep data; report.txt + per-model JSON
 results/
-├── measured_backward/     six runs of JSON + report; see its README
+├── measured_backward/     nine runs of JSON + report; see its README
 ├── recompute_closure/     closure distributions per plan, cpu and cuda
+├── memory_snapshot/       snapshot and intervention JSON, reports, dumped FX graphs
 └── schedule_sensitivity/  schedule_report.txt
 docs/
 ├── UPSTREAM_BUG.md  the nondeterminism and schedule-choice issues
