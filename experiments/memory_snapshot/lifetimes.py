@@ -52,7 +52,7 @@ def lifetimes(lines: list[str], pattern: str) -> list[dict]:
             defs[m.group(1)] = i
     out = []
     for name, d in defs.items():
-        tok = re.compile(rf"\b{re.escape(name)}\b")
+        tok = re.compile(rf"(?<![.\w]){re.escape(name)}\b")
         last = max(i for i, line in enumerate(lines) if tok.search(line))
         out.append({"node": name, "defined": d, "last_used": last})
     body = len(lines)
