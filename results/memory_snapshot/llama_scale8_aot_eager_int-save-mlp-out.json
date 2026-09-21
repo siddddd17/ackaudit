@@ -1,0 +1,2205 @@
+[
+  {
+    "measured_delta": 311044096,
+    "replay": {
+      "free_requested": {
+        "peak": 310224392,
+        "idx": 4094,
+        "err": 819704
+      },
+      "free_completed": {
+        "peak": 310224392,
+        "idx": 4094,
+        "err": 819704
+      }
+    },
+    "free_action_used": "free_requested",
+    "peak_bytes": 310224392,
+    "peak_matches_measured": false,
+    "peak_index": 4094,
+    "trace_len": 14431,
+    "boundary_index": 3404,
+    "peak_in_backward": true,
+    "live_count": 244,
+    "by_phase": {
+      "forward": {
+        "bytes": 56230308,
+        "count": 105
+      },
+      "backward": {
+        "bytes": 253994084,
+        "count": 139
+      }
+    },
+    "top_groups": [
+      {
+        "phase": "backward",
+        "graph_file": "<eval_with_key>.5",
+        "op": "aten.add",
+        "bytes": 159383552,
+        "count": 76
+      },
+      {
+        "phase": "forward",
+        "graph_file": "<eval_with_key>.3",
+        "op": "aten._scaled_dot_product_efficient_attention",
+        "bytes": 56230304,
+        "count": 104
+      },
+      {
+        "phase": "backward",
+        "graph_file": "<eval_with_key>.5",
+        "op": "aten.mul",
+        "bytes": 35258368,
+        "count": 17
+      },
+      {
+        "phase": "backward",
+        "graph_file": "<eval_with_key>.5",
+        "op": "aten.mm",
+        "bytes": 30195712,
+        "count": 10
+      },
+      {
+        "phase": "backward",
+        "graph_file": "<eval_with_key>.5",
+        "op": "aten._scaled_dot_product_efficient_attention",
+        "bytes": 12976224,
+        "count": 24
+      },
+      {
+        "phase": "backward",
+        "graph_file": "<eval_with_key>.5",
+        "op": "aten.where",
+        "bytes": 8388608,
+        "count": 1
+      },
+      {
+        "phase": "backward",
+        "graph_file": "<eval_with_key>.5",
+        "op": "aten.silu",
+        "bytes": 5636096,
+        "count": 1
+      },
+      {
+        "phase": "backward",
+        "graph_file": "<eval_with_key>.5",
+        "op": "aten.embedding",
+        "bytes": 2097152,
+        "count": 1
+      },
+      {
+        "phase": "backward",
+        "graph_file": "<eval_with_key>.5",
+        "op": "aten.rsqrt",
+        "bytes": 57344,
+        "count": 7
+      },
+      {
+        "phase": "backward",
+        "graph_file": "<eval_with_key>.5",
+        "op": "aten.sum",
+        "bytes": 1024,
+        "count": 1
+      },
+      {
+        "phase": "forward",
+        "graph_file": "<eval_with_key>.3",
+        "op": "aten.sum",
+        "bytes": 4,
+        "count": 1
+      },
+      {
+        "phase": "backward",
+        "graph_file": "",
+        "op": "?",
+        "bytes": 4,
+        "count": 1
+      }
+    ],
+    "timing": {
+      "peak_position_in_backward": 0.06257368277863426,
+      "live_backward_alloc_position": {
+        "min": 9.068649678062936e-05,
+        "median": 0.03001723043438832,
+        "max": 0.06257368277863426
+      }
+    },
+    "backward_names_by_op": {
+      "?": [
+        "?"
+      ],
+      "aten.embedding": [
+        "embedding"
+      ],
+      "aten.mul": [
+        "mul",
+        "mul_1",
+        "mul_236",
+        "mul_237",
+        "mul_245",
+        "mul_246",
+        "mul_254",
+        "mul_255",
+        "mul_263",
+        "mul_264",
+        "mul_272",
+        "mul_273",
+        "mul_281",
+        "mul_282",
+        "mul_287",
+        "mul_288",
+        "mul_300"
+      ],
+      "aten.where": [
+        "where"
+      ],
+      "aten.add": [
+        "add_102",
+        "add_104",
+        "add_108",
+        "add_110",
+        "add_114",
+        "add_116",
+        "add_12",
+        "add_120",
+        "add_122",
+        "add_126",
+        "add_128",
+        "add_132",
+        "add_134",
+        "add_138",
+        "add_14",
+        "add_140",
+        "add_144",
+        "add_146",
+        "add_150",
+        "add_152",
+        "add_156",
+        "add_158",
+        "add_160",
+        "add_161",
+        "add_162",
+        "add_164",
+        "add_166",
+        "add_167",
+        "add_168",
+        "add_170",
+        "add_172",
+        "add_173",
+        "add_174",
+        "add_176",
+        "add_178",
+        "add_179",
+        "add_18",
+        "add_180",
+        "add_182",
+        "add_184",
+        "add_185",
+        "add_186",
+        "add_188",
+        "add_190",
+        "add_191",
+        "add_192",
+        "add_196",
+        "add_20",
+        "add_24",
+        "add_26",
+        "add_30",
+        "add_32",
+        "add_36",
+        "add_38",
+        "add_42",
+        "add_44",
+        "add_48",
+        "add_50",
+        "add_54",
+        "add_56",
+        "add_6",
+        "add_60",
+        "add_62",
+        "add_66",
+        "add_68",
+        "add_72",
+        "add_74",
+        "add_78",
+        "add_8",
+        "add_80",
+        "add_84",
+        "add_86",
+        "add_90",
+        "add_92",
+        "add_96",
+        "add_98"
+      ],
+      "aten.rsqrt": [
+        "rsqrt_52",
+        "rsqrt_54",
+        "rsqrt_56",
+        "rsqrt_58",
+        "rsqrt_60",
+        "rsqrt_62",
+        "rsqrt_63"
+      ],
+      "aten.mm": [
+        "mm_184",
+        "mm_191",
+        "mm_198",
+        "mm_205",
+        "mm_212",
+        "mm_219",
+        "mm_221",
+        "mm_222",
+        "mm_224",
+        "mm_225"
+      ],
+      "aten._scaled_dot_product_efficient_attention": [
+        "_scaled_dot_product_efficient_attention_26",
+        "_scaled_dot_product_efficient_attention_27",
+        "_scaled_dot_product_efficient_attention_28",
+        "_scaled_dot_product_efficient_attention_29",
+        "_scaled_dot_product_efficient_attention_30",
+        "_scaled_dot_product_efficient_attention_31"
+      ],
+      "aten.sum": [
+        "sum_2"
+      ],
+      "aten.silu": [
+        "silu_31"
+      ]
+    },
+    "live_nodes": [
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 136,
+        "node": "_scaled_dot_product_efficient_attention",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 137,
+        "node": "_scaled_dot_product_efficient_attention",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 2097152,
+        "alloc_index": 138,
+        "node": "_scaled_dot_product_efficient_attention",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 65536,
+        "alloc_index": 139,
+        "node": "_scaled_dot_product_efficient_attention",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 237,
+        "node": "_scaled_dot_product_efficient_attention_1",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 238,
+        "node": "_scaled_dot_product_efficient_attention_1",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 2097152,
+        "alloc_index": 239,
+        "node": "_scaled_dot_product_efficient_attention_1",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 65536,
+        "alloc_index": 240,
+        "node": "_scaled_dot_product_efficient_attention_1",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 339,
+        "node": "_scaled_dot_product_efficient_attention_2",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 340,
+        "node": "_scaled_dot_product_efficient_attention_2",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 2097152,
+        "alloc_index": 341,
+        "node": "_scaled_dot_product_efficient_attention_2",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 65536,
+        "alloc_index": 342,
+        "node": "_scaled_dot_product_efficient_attention_2",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 440,
+        "node": "_scaled_dot_product_efficient_attention_3",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 441,
+        "node": "_scaled_dot_product_efficient_attention_3",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 2097152,
+        "alloc_index": 442,
+        "node": "_scaled_dot_product_efficient_attention_3",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 65536,
+        "alloc_index": 443,
+        "node": "_scaled_dot_product_efficient_attention_3",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 541,
+        "node": "_scaled_dot_product_efficient_attention_4",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 542,
+        "node": "_scaled_dot_product_efficient_attention_4",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 2097152,
+        "alloc_index": 543,
+        "node": "_scaled_dot_product_efficient_attention_4",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 65536,
+        "alloc_index": 544,
+        "node": "_scaled_dot_product_efficient_attention_4",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 642,
+        "node": "_scaled_dot_product_efficient_attention_5",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 643,
+        "node": "_scaled_dot_product_efficient_attention_5",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 2097152,
+        "alloc_index": 644,
+        "node": "_scaled_dot_product_efficient_attention_5",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 65536,
+        "alloc_index": 645,
+        "node": "_scaled_dot_product_efficient_attention_5",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 743,
+        "node": "_scaled_dot_product_efficient_attention_6",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 744,
+        "node": "_scaled_dot_product_efficient_attention_6",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 2097152,
+        "alloc_index": 745,
+        "node": "_scaled_dot_product_efficient_attention_6",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 65536,
+        "alloc_index": 746,
+        "node": "_scaled_dot_product_efficient_attention_6",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 844,
+        "node": "_scaled_dot_product_efficient_attention_7",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 845,
+        "node": "_scaled_dot_product_efficient_attention_7",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 2097152,
+        "alloc_index": 846,
+        "node": "_scaled_dot_product_efficient_attention_7",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 65536,
+        "alloc_index": 847,
+        "node": "_scaled_dot_product_efficient_attention_7",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 946,
+        "node": "_scaled_dot_product_efficient_attention_8",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 947,
+        "node": "_scaled_dot_product_efficient_attention_8",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 2097152,
+        "alloc_index": 948,
+        "node": "_scaled_dot_product_efficient_attention_8",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 65536,
+        "alloc_index": 949,
+        "node": "_scaled_dot_product_efficient_attention_8",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 1047,
+        "node": "_scaled_dot_product_efficient_attention_9",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 1048,
+        "node": "_scaled_dot_product_efficient_attention_9",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 2097152,
+        "alloc_index": 1049,
+        "node": "_scaled_dot_product_efficient_attention_9",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 65536,
+        "alloc_index": 1050,
+        "node": "_scaled_dot_product_efficient_attention_9",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 1148,
+        "node": "_scaled_dot_product_efficient_attention_10",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 1149,
+        "node": "_scaled_dot_product_efficient_attention_10",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 2097152,
+        "alloc_index": 1150,
+        "node": "_scaled_dot_product_efficient_attention_10",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 65536,
+        "alloc_index": 1151,
+        "node": "_scaled_dot_product_efficient_attention_10",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 1249,
+        "node": "_scaled_dot_product_efficient_attention_11",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 1250,
+        "node": "_scaled_dot_product_efficient_attention_11",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 2097152,
+        "alloc_index": 1251,
+        "node": "_scaled_dot_product_efficient_attention_11",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 65536,
+        "alloc_index": 1252,
+        "node": "_scaled_dot_product_efficient_attention_11",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 1350,
+        "node": "_scaled_dot_product_efficient_attention_12",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 1351,
+        "node": "_scaled_dot_product_efficient_attention_12",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 2097152,
+        "alloc_index": 1352,
+        "node": "_scaled_dot_product_efficient_attention_12",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 65536,
+        "alloc_index": 1353,
+        "node": "_scaled_dot_product_efficient_attention_12",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 1452,
+        "node": "_scaled_dot_product_efficient_attention_13",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 1453,
+        "node": "_scaled_dot_product_efficient_attention_13",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 2097152,
+        "alloc_index": 1454,
+        "node": "_scaled_dot_product_efficient_attention_13",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 65536,
+        "alloc_index": 1455,
+        "node": "_scaled_dot_product_efficient_attention_13",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 1553,
+        "node": "_scaled_dot_product_efficient_attention_14",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 1554,
+        "node": "_scaled_dot_product_efficient_attention_14",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 2097152,
+        "alloc_index": 1555,
+        "node": "_scaled_dot_product_efficient_attention_14",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 65536,
+        "alloc_index": 1556,
+        "node": "_scaled_dot_product_efficient_attention_14",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 1654,
+        "node": "_scaled_dot_product_efficient_attention_15",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 1655,
+        "node": "_scaled_dot_product_efficient_attention_15",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 2097152,
+        "alloc_index": 1656,
+        "node": "_scaled_dot_product_efficient_attention_15",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 65536,
+        "alloc_index": 1657,
+        "node": "_scaled_dot_product_efficient_attention_15",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 1755,
+        "node": "_scaled_dot_product_efficient_attention_16",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 1756,
+        "node": "_scaled_dot_product_efficient_attention_16",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 2097152,
+        "alloc_index": 1757,
+        "node": "_scaled_dot_product_efficient_attention_16",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 65536,
+        "alloc_index": 1758,
+        "node": "_scaled_dot_product_efficient_attention_16",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 1856,
+        "node": "_scaled_dot_product_efficient_attention_17",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 1857,
+        "node": "_scaled_dot_product_efficient_attention_17",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 2097152,
+        "alloc_index": 1858,
+        "node": "_scaled_dot_product_efficient_attention_17",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 65536,
+        "alloc_index": 1859,
+        "node": "_scaled_dot_product_efficient_attention_17",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 1958,
+        "node": "_scaled_dot_product_efficient_attention_18",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 1959,
+        "node": "_scaled_dot_product_efficient_attention_18",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 2097152,
+        "alloc_index": 1960,
+        "node": "_scaled_dot_product_efficient_attention_18",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 65536,
+        "alloc_index": 1961,
+        "node": "_scaled_dot_product_efficient_attention_18",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 2059,
+        "node": "_scaled_dot_product_efficient_attention_19",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 2060,
+        "node": "_scaled_dot_product_efficient_attention_19",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 2097152,
+        "alloc_index": 2061,
+        "node": "_scaled_dot_product_efficient_attention_19",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 65536,
+        "alloc_index": 2062,
+        "node": "_scaled_dot_product_efficient_attention_19",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 2160,
+        "node": "_scaled_dot_product_efficient_attention_20",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 2161,
+        "node": "_scaled_dot_product_efficient_attention_20",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 2097152,
+        "alloc_index": 2162,
+        "node": "_scaled_dot_product_efficient_attention_20",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 65536,
+        "alloc_index": 2163,
+        "node": "_scaled_dot_product_efficient_attention_20",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 2261,
+        "node": "_scaled_dot_product_efficient_attention_21",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 2262,
+        "node": "_scaled_dot_product_efficient_attention_21",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 2097152,
+        "alloc_index": 2263,
+        "node": "_scaled_dot_product_efficient_attention_21",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 65536,
+        "alloc_index": 2264,
+        "node": "_scaled_dot_product_efficient_attention_21",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 2362,
+        "node": "_scaled_dot_product_efficient_attention_22",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 2363,
+        "node": "_scaled_dot_product_efficient_attention_22",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 2097152,
+        "alloc_index": 2364,
+        "node": "_scaled_dot_product_efficient_attention_22",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 65536,
+        "alloc_index": 2365,
+        "node": "_scaled_dot_product_efficient_attention_22",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 2464,
+        "node": "_scaled_dot_product_efficient_attention_23",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 2465,
+        "node": "_scaled_dot_product_efficient_attention_23",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 2097152,
+        "alloc_index": 2466,
+        "node": "_scaled_dot_product_efficient_attention_23",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 65536,
+        "alloc_index": 2467,
+        "node": "_scaled_dot_product_efficient_attention_23",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 2565,
+        "node": "_scaled_dot_product_efficient_attention_24",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 2566,
+        "node": "_scaled_dot_product_efficient_attention_24",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 2097152,
+        "alloc_index": 2567,
+        "node": "_scaled_dot_product_efficient_attention_24",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 65536,
+        "alloc_index": 2568,
+        "node": "_scaled_dot_product_efficient_attention_24",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 2666,
+        "node": "_scaled_dot_product_efficient_attention_25",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 2667,
+        "node": "_scaled_dot_product_efficient_attention_25",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 2097152,
+        "alloc_index": 2668,
+        "node": "_scaled_dot_product_efficient_attention_25",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 65536,
+        "alloc_index": 2669,
+        "node": "_scaled_dot_product_efficient_attention_25",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 4,
+        "alloc_index": 3395,
+        "node": "sum_1",
+        "op": "aten.sum"
+      },
+      {
+        "phase": "backward",
+        "bytes": 4,
+        "alloc_index": 3405,
+        "node": "?",
+        "op": "?"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3407,
+        "node": "embedding",
+        "op": "aten.embedding"
+      },
+      {
+        "phase": "backward",
+        "bytes": 131072,
+        "alloc_index": 3470,
+        "node": "mul",
+        "op": "aten.mul"
+      },
+      {
+        "phase": "backward",
+        "bytes": 131072,
+        "alloc_index": 3476,
+        "node": "mul_1",
+        "op": "aten.mul"
+      },
+      {
+        "phase": "backward",
+        "bytes": 8388608,
+        "alloc_index": 3481,
+        "node": "where",
+        "op": "aten.where"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3489,
+        "node": "add_6",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3492,
+        "node": "add_8",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3496,
+        "node": "add_12",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3499,
+        "node": "add_14",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3503,
+        "node": "add_18",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3506,
+        "node": "add_20",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3510,
+        "node": "add_24",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3513,
+        "node": "add_26",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3517,
+        "node": "add_30",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3520,
+        "node": "add_32",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3524,
+        "node": "add_36",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3527,
+        "node": "add_38",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3531,
+        "node": "add_42",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3534,
+        "node": "add_44",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3538,
+        "node": "add_48",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3541,
+        "node": "add_50",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3545,
+        "node": "add_54",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3548,
+        "node": "add_56",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3552,
+        "node": "add_60",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3555,
+        "node": "add_62",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3559,
+        "node": "add_66",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3562,
+        "node": "add_68",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3566,
+        "node": "add_72",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3569,
+        "node": "add_74",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3573,
+        "node": "add_78",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3576,
+        "node": "add_80",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3581,
+        "node": "add_84",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3584,
+        "node": "add_86",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3588,
+        "node": "add_90",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3591,
+        "node": "add_92",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3595,
+        "node": "add_96",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3598,
+        "node": "add_98",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3602,
+        "node": "add_102",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3605,
+        "node": "add_104",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3609,
+        "node": "add_108",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3612,
+        "node": "add_110",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3616,
+        "node": "add_114",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3619,
+        "node": "add_116",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3623,
+        "node": "add_120",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3626,
+        "node": "add_122",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3630,
+        "node": "add_126",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3633,
+        "node": "add_128",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3637,
+        "node": "add_132",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3640,
+        "node": "add_134",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3644,
+        "node": "add_138",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3647,
+        "node": "add_140",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3652,
+        "node": "add_144",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3655,
+        "node": "add_146",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3659,
+        "node": "add_150",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3662,
+        "node": "add_152",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3666,
+        "node": "add_156",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3669,
+        "node": "add_158",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 8192,
+        "alloc_index": 3679,
+        "node": "rsqrt_52",
+        "op": "aten.rsqrt"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3682,
+        "node": "mul_236",
+        "op": "aten.mul"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3683,
+        "node": "mul_237",
+        "op": "aten.mul"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3686,
+        "node": "mm_184",
+        "op": "aten.mm"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3697,
+        "node": "add_160",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3712,
+        "node": "add_161",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 8,
+        "alloc_index": 3717,
+        "node": "_scaled_dot_product_efficient_attention_26",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "backward",
+        "bytes": 8,
+        "alloc_index": 3718,
+        "node": "_scaled_dot_product_efficient_attention_26",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3719,
+        "node": "_scaled_dot_product_efficient_attention_26",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "backward",
+        "bytes": 65536,
+        "alloc_index": 3720,
+        "node": "_scaled_dot_product_efficient_attention_26",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3722,
+        "node": "add_162",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3725,
+        "node": "add_164",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 8192,
+        "alloc_index": 3735,
+        "node": "rsqrt_54",
+        "op": "aten.rsqrt"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3738,
+        "node": "mul_245",
+        "op": "aten.mul"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3740,
+        "node": "mul_246",
+        "op": "aten.mul"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3743,
+        "node": "mm_191",
+        "op": "aten.mm"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3754,
+        "node": "add_166",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3769,
+        "node": "add_167",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 8,
+        "alloc_index": 3774,
+        "node": "_scaled_dot_product_efficient_attention_27",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "backward",
+        "bytes": 8,
+        "alloc_index": 3775,
+        "node": "_scaled_dot_product_efficient_attention_27",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3776,
+        "node": "_scaled_dot_product_efficient_attention_27",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "backward",
+        "bytes": 65536,
+        "alloc_index": 3777,
+        "node": "_scaled_dot_product_efficient_attention_27",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3779,
+        "node": "add_168",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3782,
+        "node": "add_170",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 8192,
+        "alloc_index": 3792,
+        "node": "rsqrt_56",
+        "op": "aten.rsqrt"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3795,
+        "node": "mul_254",
+        "op": "aten.mul"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3796,
+        "node": "mul_255",
+        "op": "aten.mul"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3800,
+        "node": "mm_198",
+        "op": "aten.mm"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3811,
+        "node": "add_172",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3826,
+        "node": "add_173",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 8,
+        "alloc_index": 3831,
+        "node": "_scaled_dot_product_efficient_attention_28",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "backward",
+        "bytes": 8,
+        "alloc_index": 3832,
+        "node": "_scaled_dot_product_efficient_attention_28",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3833,
+        "node": "_scaled_dot_product_efficient_attention_28",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "backward",
+        "bytes": 65536,
+        "alloc_index": 3834,
+        "node": "_scaled_dot_product_efficient_attention_28",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3836,
+        "node": "add_174",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3839,
+        "node": "add_176",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 8192,
+        "alloc_index": 3849,
+        "node": "rsqrt_58",
+        "op": "aten.rsqrt"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3852,
+        "node": "mul_263",
+        "op": "aten.mul"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3853,
+        "node": "mul_264",
+        "op": "aten.mul"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3856,
+        "node": "mm_205",
+        "op": "aten.mm"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3867,
+        "node": "add_178",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3882,
+        "node": "add_179",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 8,
+        "alloc_index": 3887,
+        "node": "_scaled_dot_product_efficient_attention_29",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "backward",
+        "bytes": 8,
+        "alloc_index": 3888,
+        "node": "_scaled_dot_product_efficient_attention_29",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3889,
+        "node": "_scaled_dot_product_efficient_attention_29",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "backward",
+        "bytes": 65536,
+        "alloc_index": 3890,
+        "node": "_scaled_dot_product_efficient_attention_29",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3893,
+        "node": "add_180",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3896,
+        "node": "add_182",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 8192,
+        "alloc_index": 3906,
+        "node": "rsqrt_60",
+        "op": "aten.rsqrt"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3909,
+        "node": "mul_272",
+        "op": "aten.mul"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3910,
+        "node": "mul_273",
+        "op": "aten.mul"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3913,
+        "node": "mm_212",
+        "op": "aten.mm"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3924,
+        "node": "add_184",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3939,
+        "node": "add_185",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 8,
+        "alloc_index": 3944,
+        "node": "_scaled_dot_product_efficient_attention_30",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "backward",
+        "bytes": 8,
+        "alloc_index": 3945,
+        "node": "_scaled_dot_product_efficient_attention_30",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3946,
+        "node": "_scaled_dot_product_efficient_attention_30",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "backward",
+        "bytes": 65536,
+        "alloc_index": 3947,
+        "node": "_scaled_dot_product_efficient_attention_30",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3949,
+        "node": "add_186",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3952,
+        "node": "add_188",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 8192,
+        "alloc_index": 3962,
+        "node": "rsqrt_62",
+        "op": "aten.rsqrt"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3965,
+        "node": "mul_281",
+        "op": "aten.mul"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3966,
+        "node": "mul_282",
+        "op": "aten.mul"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3970,
+        "node": "mm_219",
+        "op": "aten.mm"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3981,
+        "node": "add_190",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3996,
+        "node": "add_191",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 8,
+        "alloc_index": 4001,
+        "node": "_scaled_dot_product_efficient_attention_31",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "backward",
+        "bytes": 8,
+        "alloc_index": 4002,
+        "node": "_scaled_dot_product_efficient_attention_31",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 4003,
+        "node": "_scaled_dot_product_efficient_attention_31",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "backward",
+        "bytes": 65536,
+        "alloc_index": 4004,
+        "node": "_scaled_dot_product_efficient_attention_31",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 4006,
+        "node": "add_192",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 1024,
+        "alloc_index": 4026,
+        "node": "sum_2",
+        "op": "aten.sum"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 4067,
+        "node": "add_196",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 8192,
+        "alloc_index": 4079,
+        "node": "rsqrt_63",
+        "op": "aten.rsqrt"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 4082,
+        "node": "mul_287",
+        "op": "aten.mul"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 4083,
+        "node": "mul_288",
+        "op": "aten.mul"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 4084,
+        "node": "mm_221",
+        "op": "aten.mm"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 4086,
+        "node": "silu_31",
+        "op": "aten.silu"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 4087,
+        "node": "mm_222",
+        "op": "aten.mm"
+      },
+      {
+        "phase": "backward",
+        "bytes": 704512,
+        "alloc_index": 4089,
+        "node": "mm_224",
+        "op": "aten.mm"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 4092,
+        "node": "mm_225",
+        "op": "aten.mm"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 4094,
+        "node": "mul_300",
+        "op": "aten.mul"
+      }
+    ],
+    "top_allocations": [
+      {
+        "bytes": 8388608,
+        "phase": "backward",
+        "alloc_index": 3481,
+        "graph_file": "<eval_with_key>.5",
+        "line": 476,
+        "source": "where = torch.ops.aten.where.self(expand_1, scalar_tensor_1, scalar_tensor);  expand_1 = scalar_tensor_1 = scalar_tensor = None"
+      },
+      {
+        "bytes": 5636096,
+        "phase": "backward",
+        "alloc_index": 4094,
+        "graph_file": "<eval_with_key>.5",
+        "line": 1059,
+        "source": "mul_300 = torch.ops.aten.mul.Tensor(view_357, silu_31);  silu_31 = None"
+      },
+      {
+        "bytes": 5636096,
+        "phase": "backward",
+        "alloc_index": 4092,
+        "graph_file": "<eval_with_key>.5",
+        "line": 1056,
+        "source": "mm_225 = torch.ops.aten.mm.default(view_356, t_226);  view_356 = t_226 = None"
+      },
+      {
+        "bytes": 5636096,
+        "phase": "backward",
+        "alloc_index": 4087,
+        "graph_file": "<eval_with_key>.5",
+        "line": 1048,
+        "source": "mm_222 = torch.ops.aten.mm.default(view_352, t_222)"
+      },
+      {
+        "bytes": 5636096,
+        "phase": "backward",
+        "alloc_index": 4086,
+        "graph_file": "<eval_with_key>.5",
+        "line": 1046,
+        "source": "silu_31 = torch.ops.aten.silu.default(_unsafe_view_221)"
+      },
+      {
+        "bytes": 5636096,
+        "phase": "backward",
+        "alloc_index": 4084,
+        "graph_file": "<eval_with_key>.5",
+        "line": 1044,
+        "source": "mm_221 = torch.ops.aten.mm.default(view_352, t_221)"
+      },
+      {
+        "bytes": 2097152,
+        "phase": "forward",
+        "alloc_index": 2668,
+        "graph_file": "<eval_with_key>.3",
+        "line": 2085,
+        "source": "_scaled_dot_product_efficient_attention_25 = torch.ops.aten._scaled_dot_product_efficient_attention.default(add_154, add_155, transpose_103, expand_5, True, scale = 0.1767766952966369);  add_154 = add_155 = transpose_103 = None"
+      },
+      {
+        "bytes": 2097152,
+        "phase": "forward",
+        "alloc_index": 2567,
+        "graph_file": "<eval_with_key>.3",
+        "line": 2017,
+        "source": "_scaled_dot_product_efficient_attention_24 = torch.ops.aten._scaled_dot_product_efficient_attention.default(add_148, add_149, transpose_99, expand_5, True, scale = 0.1767766952966369);  add_148 = add_149 = transpose_99 = None"
+      },
+      {
+        "bytes": 2097152,
+        "phase": "forward",
+        "alloc_index": 2466,
+        "graph_file": "<eval_with_key>.3",
+        "line": 1949,
+        "source": "_scaled_dot_product_efficient_attention_23 = torch.ops.aten._scaled_dot_product_efficient_attention.default(add_142, add_143, transpose_95, expand_5, True, scale = 0.1767766952966369);  add_142 = add_143 = transpose_95 = None"
+      },
+      {
+        "bytes": 2097152,
+        "phase": "forward",
+        "alloc_index": 2364,
+        "graph_file": "<eval_with_key>.3",
+        "line": 1881,
+        "source": "_scaled_dot_product_efficient_attention_22 = torch.ops.aten._scaled_dot_product_efficient_attention.default(add_136, add_137, transpose_91, expand_5, True, scale = 0.1767766952966369);  add_136 = add_137 = transpose_91 = None"
+      },
+      {
+        "bytes": 2097152,
+        "phase": "forward",
+        "alloc_index": 2263,
+        "graph_file": "<eval_with_key>.3",
+        "line": 1813,
+        "source": "_scaled_dot_product_efficient_attention_21 = torch.ops.aten._scaled_dot_product_efficient_attention.default(add_130, add_131, transpose_87, expand_5, True, scale = 0.1767766952966369);  add_130 = add_131 = transpose_87 = None"
+      },
+      {
+        "bytes": 2097152,
+        "phase": "forward",
+        "alloc_index": 2162,
+        "graph_file": "<eval_with_key>.3",
+        "line": 1745,
+        "source": "_scaled_dot_product_efficient_attention_20 = torch.ops.aten._scaled_dot_product_efficient_attention.default(add_124, add_125, transpose_83, expand_5, True, scale = 0.1767766952966369);  add_124 = add_125 = transpose_83 = None"
+      },
+      {
+        "bytes": 2097152,
+        "phase": "forward",
+        "alloc_index": 2061,
+        "graph_file": "<eval_with_key>.3",
+        "line": 1677,
+        "source": "_scaled_dot_product_efficient_attention_19 = torch.ops.aten._scaled_dot_product_efficient_attention.default(add_118, add_119, transpose_79, expand_5, True, scale = 0.1767766952966369);  add_118 = add_119 = transpose_79 = None"
+      },
+      {
+        "bytes": 2097152,
+        "phase": "forward",
+        "alloc_index": 1960,
+        "graph_file": "<eval_with_key>.3",
+        "line": 1609,
+        "source": "_scaled_dot_product_efficient_attention_18 = torch.ops.aten._scaled_dot_product_efficient_attention.default(add_112, add_113, transpose_75, expand_5, True, scale = 0.1767766952966369);  add_112 = add_113 = transpose_75 = None"
+      },
+      {
+        "bytes": 2097152,
+        "phase": "forward",
+        "alloc_index": 1858,
+        "graph_file": "<eval_with_key>.3",
+        "line": 1541,
+        "source": "_scaled_dot_product_efficient_attention_17 = torch.ops.aten._scaled_dot_product_efficient_attention.default(add_106, add_107, transpose_71, expand_5, True, scale = 0.1767766952966369);  add_106 = add_107 = transpose_71 = None"
+      },
+      {
+        "bytes": 2097152,
+        "phase": "forward",
+        "alloc_index": 1757,
+        "graph_file": "<eval_with_key>.3",
+        "line": 1473,
+        "source": "_scaled_dot_product_efficient_attention_16 = torch.ops.aten._scaled_dot_product_efficient_attention.default(add_100, add_101, transpose_67, expand_5, True, scale = 0.1767766952966369);  add_100 = add_101 = transpose_67 = None"
+      },
+      {
+        "bytes": 2097152,
+        "phase": "forward",
+        "alloc_index": 1656,
+        "graph_file": "<eval_with_key>.3",
+        "line": 1405,
+        "source": "_scaled_dot_product_efficient_attention_15 = torch.ops.aten._scaled_dot_product_efficient_attention.default(add_94, add_95, transpose_63, expand_5, True, scale = 0.1767766952966369);  add_94 = add_95 = transpose_63 = None"
+      },
+      {
+        "bytes": 2097152,
+        "phase": "forward",
+        "alloc_index": 1555,
+        "graph_file": "<eval_with_key>.3",
+        "line": 1337,
+        "source": "_scaled_dot_product_efficient_attention_14 = torch.ops.aten._scaled_dot_product_efficient_attention.default(add_88, add_89, transpose_59, expand_5, True, scale = 0.1767766952966369);  add_88 = add_89 = transpose_59 = None"
+      },
+      {
+        "bytes": 2097152,
+        "phase": "forward",
+        "alloc_index": 1454,
+        "graph_file": "<eval_with_key>.3",
+        "line": 1269,
+        "source": "_scaled_dot_product_efficient_attention_13 = torch.ops.aten._scaled_dot_product_efficient_attention.default(add_82, add_83, transpose_55, expand_5, True, scale = 0.1767766952966369);  add_82 = add_83 = transpose_55 = None"
+      },
+      {
+        "bytes": 2097152,
+        "phase": "forward",
+        "alloc_index": 1352,
+        "graph_file": "<eval_with_key>.3",
+        "line": 1201,
+        "source": "_scaled_dot_product_efficient_attention_12 = torch.ops.aten._scaled_dot_product_efficient_attention.default(add_76, add_77, transpose_51, expand_5, True, scale = 0.1767766952966369);  add_76 = add_77 = transpose_51 = None"
+      },
+      {
+        "bytes": 2097152,
+        "phase": "forward",
+        "alloc_index": 1251,
+        "graph_file": "<eval_with_key>.3",
+        "line": 1133,
+        "source": "_scaled_dot_product_efficient_attention_11 = torch.ops.aten._scaled_dot_product_efficient_attention.default(add_70, add_71, transpose_47, expand_5, True, scale = 0.1767766952966369);  add_70 = add_71 = transpose_47 = None"
+      },
+      {
+        "bytes": 2097152,
+        "phase": "forward",
+        "alloc_index": 1150,
+        "graph_file": "<eval_with_key>.3",
+        "line": 1065,
+        "source": "_scaled_dot_product_efficient_attention_10 = torch.ops.aten._scaled_dot_product_efficient_attention.default(add_64, add_65, transpose_43, expand_5, True, scale = 0.1767766952966369);  add_64 = add_65 = transpose_43 = None"
+      },
+      {
+        "bytes": 2097152,
+        "phase": "forward",
+        "alloc_index": 1049,
+        "graph_file": "<eval_with_key>.3",
+        "line": 997,
+        "source": "_scaled_dot_product_efficient_attention_9 = torch.ops.aten._scaled_dot_product_efficient_attention.default(add_58, add_59, transpose_39, expand_5, True, scale = 0.1767766952966369);  add_58 = add_59 = transpose_39 = None"
+      },
+      {
+        "bytes": 2097152,
+        "phase": "forward",
+        "alloc_index": 948,
+        "graph_file": "<eval_with_key>.3",
+        "line": 929,
+        "source": "_scaled_dot_product_efficient_attention_8 = torch.ops.aten._scaled_dot_product_efficient_attention.default(add_52, add_53, transpose_35, expand_5, True, scale = 0.1767766952966369);  add_52 = add_53 = transpose_35 = None"
+      },
+      {
+        "bytes": 2097152,
+        "phase": "forward",
+        "alloc_index": 846,
+        "graph_file": "<eval_with_key>.3",
+        "line": 861,
+        "source": "_scaled_dot_product_efficient_attention_7 = torch.ops.aten._scaled_dot_product_efficient_attention.default(add_46, add_47, transpose_31, expand_5, True, scale = 0.1767766952966369);  add_46 = add_47 = transpose_31 = None"
+      }
+    ],
+    "budget": 0.05,
+    "model": "llama",
+    "scale": 8,
+    "backend": "aot_eager",
+    "resident_before": 221613056,
+    "torch_version": "2.14.0+cu130",
+    "trace_overflowed": false,
+    "reorder_pass": true,
+    "intervention": "save-mlp-out",
+    "solver": {
+      "calls": 1,
+      "n_items": 324,
+      "n_mlp_outputs": 32,
+      "mlp_saved_by_solver": 0,
+      "mlp_saved_after": 32,
+      "max_memory": 0.05,
+      "solver_saved_weight": 0.04864546904430524,
+      "final_saved_weight": 0.1066345170149988
+    },
+    "measured_requested": 310224392,
+    "replay_vs_requested_err": 0
+  }
+]

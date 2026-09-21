@@ -1,0 +1,3692 @@
+[
+  {
+    "measured_delta": 1087343104,
+    "replay": {
+      "free_requested": {
+        "peak": 1084556816,
+        "idx": 4211,
+        "err": 2786288
+      },
+      "free_completed": {
+        "peak": 1084556816,
+        "idx": 4211,
+        "err": 2786288
+      }
+    },
+    "free_action_used": "free_requested",
+    "peak_bytes": 1084556816,
+    "peak_matches_measured": false,
+    "peak_index": 4211,
+    "trace_len": 14363,
+    "boundary_index": 3391,
+    "peak_in_backward": true,
+    "live_count": 432,
+    "by_phase": {
+      "forward": {
+        "bytes": 99418628,
+        "count": 141
+      },
+      "backward": {
+        "bytes": 985138188,
+        "count": 291
+      }
+    },
+    "top_groups": [
+      {
+        "phase": "backward",
+        "graph_file": "<eval_with_key>.5",
+        "op": "aten.mm",
+        "bytes": 349437952,
+        "count": 62
+      },
+      {
+        "phase": "backward",
+        "graph_file": "<eval_with_key>.5",
+        "op": "aten.mul",
+        "bytes": 314572800,
+        "count": 96
+      },
+      {
+        "phase": "backward",
+        "graph_file": "<eval_with_key>.5",
+        "op": "aten.silu",
+        "bytes": 180355072,
+        "count": 32
+      },
+      {
+        "phase": "backward",
+        "graph_file": "<eval_with_key>.5",
+        "op": "aten.add",
+        "bytes": 134217728,
+        "count": 64
+      },
+      {
+        "phase": "forward",
+        "graph_file": "<eval_with_key>.3",
+        "op": "aten._scaled_dot_product_efficient_attention",
+        "bytes": 69206528,
+        "count": 128
+      },
+      {
+        "phase": "forward",
+        "graph_file": "<eval_with_key>.3",
+        "op": "aten.mm",
+        "bytes": 17563648,
+        "count": 5
+      },
+      {
+        "phase": "forward",
+        "graph_file": "<eval_with_key>.3",
+        "op": "aten.add",
+        "bytes": 12582912,
+        "count": 6
+      },
+      {
+        "phase": "backward",
+        "graph_file": "<eval_with_key>.5",
+        "op": "aten.sum",
+        "bytes": 4195336,
+        "count": 3
+      },
+      {
+        "phase": "backward",
+        "graph_file": "<eval_with_key>.5",
+        "op": "aten.embedding",
+        "bytes": 2097152,
+        "count": 1
+      },
+      {
+        "phase": "backward",
+        "graph_file": "<eval_with_key>.5",
+        "op": "aten.rsqrt",
+        "bytes": 262144,
+        "count": 32
+      },
+      {
+        "phase": "forward",
+        "graph_file": "<eval_with_key>.3",
+        "op": "aten.bmm",
+        "bytes": 65536,
+        "count": 1
+      },
+      {
+        "phase": "forward",
+        "graph_file": "<eval_with_key>.3",
+        "op": "aten.sum",
+        "bytes": 4,
+        "count": 1
+      },
+      {
+        "phase": "backward",
+        "graph_file": "",
+        "op": "?",
+        "bytes": 4,
+        "count": 1
+      }
+    ],
+    "timing": {
+      "peak_position_in_backward": 0.07473569084943492,
+      "live_backward_alloc_position": {
+        "min": 9.11410864017499e-05,
+        "median": 0.03727670433831571,
+        "max": 0.07473569084943492
+      }
+    },
+    "backward_names_by_op": {
+      "?": [
+        "?"
+      ],
+      "aten.mul": [
+        "mul_10",
+        "mul_100",
+        "mul_107",
+        "mul_108",
+        "mul_109",
+        "mul_116",
+        "mul_117",
+        "mul_118",
+        "mul_125",
+        "mul_126",
+        "mul_127",
+        "mul_134",
+        "mul_135",
+        "mul_136",
+        "mul_143",
+        "mul_144",
+        "mul_145",
+        "mul_152",
+        "mul_153",
+        "mul_154",
+        "mul_161",
+        "mul_162",
+        "mul_163",
+        "mul_17",
+        "mul_170",
+        "mul_171",
+        "mul_172",
+        "mul_179",
+        "mul_18",
+        "mul_180",
+        "mul_181",
+        "mul_188",
+        "mul_189",
+        "mul_19",
+        "mul_190",
+        "mul_197",
+        "mul_198",
+        "mul_199",
+        "mul_206",
+        "mul_207",
+        "mul_208",
+        "mul_215",
+        "mul_216",
+        "mul_217",
+        "mul_224",
+        "mul_225",
+        "mul_226",
+        "mul_233",
+        "mul_234",
+        "mul_235",
+        "mul_242",
+        "mul_243",
+        "mul_244",
+        "mul_251",
+        "mul_252",
+        "mul_253",
+        "mul_26",
+        "mul_260",
+        "mul_261",
+        "mul_262",
+        "mul_269",
+        "mul_27",
+        "mul_270",
+        "mul_271",
+        "mul_278",
+        "mul_279",
+        "mul_28",
+        "mul_280",
+        "mul_287",
+        "mul_288",
+        "mul_289",
+        "mul_292",
+        "mul_293",
+        "mul_35",
+        "mul_36",
+        "mul_37",
+        "mul_44",
+        "mul_45",
+        "mul_46",
+        "mul_53",
+        "mul_54",
+        "mul_55",
+        "mul_62",
+        "mul_63",
+        "mul_64",
+        "mul_71",
+        "mul_72",
+        "mul_73",
+        "mul_80",
+        "mul_81",
+        "mul_82",
+        "mul_89",
+        "mul_90",
+        "mul_91",
+        "mul_98",
+        "mul_99"
+      ],
+      "aten.embedding": [
+        "embedding"
+      ],
+      "aten.add": [
+        "add_102",
+        "add_104",
+        "add_108",
+        "add_110",
+        "add_114",
+        "add_116",
+        "add_12",
+        "add_120",
+        "add_122",
+        "add_126",
+        "add_128",
+        "add_132",
+        "add_134",
+        "add_138",
+        "add_14",
+        "add_140",
+        "add_144",
+        "add_146",
+        "add_150",
+        "add_152",
+        "add_156",
+        "add_158",
+        "add_162",
+        "add_164",
+        "add_168",
+        "add_170",
+        "add_174",
+        "add_176",
+        "add_18",
+        "add_180",
+        "add_182",
+        "add_186",
+        "add_188",
+        "add_192",
+        "add_194",
+        "add_20",
+        "add_24",
+        "add_26",
+        "add_30",
+        "add_32",
+        "add_36",
+        "add_38",
+        "add_42",
+        "add_44",
+        "add_48",
+        "add_50",
+        "add_54",
+        "add_56",
+        "add_6",
+        "add_60",
+        "add_62",
+        "add_66",
+        "add_68",
+        "add_72",
+        "add_74",
+        "add_78",
+        "add_8",
+        "add_80",
+        "add_84",
+        "add_86",
+        "add_90",
+        "add_92",
+        "add_96",
+        "add_98"
+      ],
+      "aten.silu": [
+        "silu",
+        "silu_1",
+        "silu_10",
+        "silu_11",
+        "silu_12",
+        "silu_13",
+        "silu_14",
+        "silu_15",
+        "silu_16",
+        "silu_17",
+        "silu_18",
+        "silu_19",
+        "silu_2",
+        "silu_20",
+        "silu_21",
+        "silu_22",
+        "silu_23",
+        "silu_24",
+        "silu_25",
+        "silu_26",
+        "silu_27",
+        "silu_28",
+        "silu_29",
+        "silu_3",
+        "silu_30",
+        "silu_31",
+        "silu_4",
+        "silu_5",
+        "silu_6",
+        "silu_7",
+        "silu_8",
+        "silu_9"
+      ],
+      "aten.rsqrt": [
+        "rsqrt_11",
+        "rsqrt_13",
+        "rsqrt_15",
+        "rsqrt_17",
+        "rsqrt_19",
+        "rsqrt_21",
+        "rsqrt_23",
+        "rsqrt_25",
+        "rsqrt_27",
+        "rsqrt_29",
+        "rsqrt_3",
+        "rsqrt_31",
+        "rsqrt_33",
+        "rsqrt_35",
+        "rsqrt_37",
+        "rsqrt_39",
+        "rsqrt_41",
+        "rsqrt_43",
+        "rsqrt_45",
+        "rsqrt_47",
+        "rsqrt_49",
+        "rsqrt_5",
+        "rsqrt_51",
+        "rsqrt_53",
+        "rsqrt_55",
+        "rsqrt_57",
+        "rsqrt_59",
+        "rsqrt_61",
+        "rsqrt_63",
+        "rsqrt_64",
+        "rsqrt_7",
+        "rsqrt_9"
+      ],
+      "aten.mm": [
+        "mm_102",
+        "mm_103",
+        "mm_109",
+        "mm_11",
+        "mm_110",
+        "mm_116",
+        "mm_117",
+        "mm_12",
+        "mm_123",
+        "mm_124",
+        "mm_130",
+        "mm_131",
+        "mm_137",
+        "mm_138",
+        "mm_144",
+        "mm_145",
+        "mm_151",
+        "mm_152",
+        "mm_158",
+        "mm_159",
+        "mm_165",
+        "mm_166",
+        "mm_172",
+        "mm_173",
+        "mm_179",
+        "mm_18",
+        "mm_180",
+        "mm_186",
+        "mm_187",
+        "mm_19",
+        "mm_193",
+        "mm_194",
+        "mm_200",
+        "mm_201",
+        "mm_207",
+        "mm_208",
+        "mm_214",
+        "mm_215",
+        "mm_221",
+        "mm_222",
+        "mm_25",
+        "mm_26",
+        "mm_32",
+        "mm_33",
+        "mm_39",
+        "mm_40",
+        "mm_46",
+        "mm_47",
+        "mm_53",
+        "mm_54",
+        "mm_60",
+        "mm_61",
+        "mm_67",
+        "mm_68",
+        "mm_74",
+        "mm_75",
+        "mm_81",
+        "mm_82",
+        "mm_88",
+        "mm_89",
+        "mm_95",
+        "mm_96"
+      ],
+      "aten.sum": [
+        "sum_2"
+      ]
+    },
+    "live_nodes": [
+      {
+        "phase": "forward",
+        "bytes": 65536,
+        "alloc_index": 61,
+        "node": "bmm",
+        "op": "aten.bmm"
+      },
+      {
+        "phase": "forward",
+        "bytes": 2097152,
+        "alloc_index": 93,
+        "node": "mm_2",
+        "op": "aten.mm"
+      },
+      {
+        "phase": "forward",
+        "bytes": 2097152,
+        "alloc_index": 106,
+        "node": "add_4",
+        "op": "aten.add"
+      },
+      {
+        "phase": "forward",
+        "bytes": 2097152,
+        "alloc_index": 121,
+        "node": "add_5",
+        "op": "aten.add"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 136,
+        "node": "_scaled_dot_product_efficient_attention",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 137,
+        "node": "_scaled_dot_product_efficient_attention",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 2097152,
+        "alloc_index": 138,
+        "node": "_scaled_dot_product_efficient_attention",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 65536,
+        "alloc_index": 139,
+        "node": "_scaled_dot_product_efficient_attention",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 5636096,
+        "alloc_index": 160,
+        "node": "mm_4",
+        "op": "aten.mm"
+      },
+      {
+        "phase": "forward",
+        "bytes": 5636096,
+        "alloc_index": 163,
+        "node": "mm_5",
+        "op": "aten.mm"
+      },
+      {
+        "phase": "forward",
+        "bytes": 2097152,
+        "alloc_index": 195,
+        "node": "mm_9",
+        "op": "aten.mm"
+      },
+      {
+        "phase": "forward",
+        "bytes": 2097152,
+        "alloc_index": 208,
+        "node": "add_10",
+        "op": "aten.add"
+      },
+      {
+        "phase": "forward",
+        "bytes": 2097152,
+        "alloc_index": 223,
+        "node": "add_11",
+        "op": "aten.add"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 228,
+        "node": "_scaled_dot_product_efficient_attention_1",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 229,
+        "node": "_scaled_dot_product_efficient_attention_1",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 2097152,
+        "alloc_index": 230,
+        "node": "_scaled_dot_product_efficient_attention_1",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 65536,
+        "alloc_index": 231,
+        "node": "_scaled_dot_product_efficient_attention_1",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 2097152,
+        "alloc_index": 291,
+        "node": "mm_16",
+        "op": "aten.mm"
+      },
+      {
+        "phase": "forward",
+        "bytes": 2097152,
+        "alloc_index": 304,
+        "node": "add_16",
+        "op": "aten.add"
+      },
+      {
+        "phase": "forward",
+        "bytes": 2097152,
+        "alloc_index": 319,
+        "node": "add_17",
+        "op": "aten.add"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 324,
+        "node": "_scaled_dot_product_efficient_attention_2",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 325,
+        "node": "_scaled_dot_product_efficient_attention_2",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 2097152,
+        "alloc_index": 326,
+        "node": "_scaled_dot_product_efficient_attention_2",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 65536,
+        "alloc_index": 327,
+        "node": "_scaled_dot_product_efficient_attention_2",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 419,
+        "node": "_scaled_dot_product_efficient_attention_3",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 420,
+        "node": "_scaled_dot_product_efficient_attention_3",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 2097152,
+        "alloc_index": 421,
+        "node": "_scaled_dot_product_efficient_attention_3",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 65536,
+        "alloc_index": 422,
+        "node": "_scaled_dot_product_efficient_attention_3",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 522,
+        "node": "_scaled_dot_product_efficient_attention_4",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 523,
+        "node": "_scaled_dot_product_efficient_attention_4",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 2097152,
+        "alloc_index": 524,
+        "node": "_scaled_dot_product_efficient_attention_4",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 65536,
+        "alloc_index": 525,
+        "node": "_scaled_dot_product_efficient_attention_4",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 625,
+        "node": "_scaled_dot_product_efficient_attention_5",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 626,
+        "node": "_scaled_dot_product_efficient_attention_5",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 2097152,
+        "alloc_index": 627,
+        "node": "_scaled_dot_product_efficient_attention_5",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 65536,
+        "alloc_index": 628,
+        "node": "_scaled_dot_product_efficient_attention_5",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 728,
+        "node": "_scaled_dot_product_efficient_attention_6",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 729,
+        "node": "_scaled_dot_product_efficient_attention_6",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 2097152,
+        "alloc_index": 730,
+        "node": "_scaled_dot_product_efficient_attention_6",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 65536,
+        "alloc_index": 731,
+        "node": "_scaled_dot_product_efficient_attention_6",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 832,
+        "node": "_scaled_dot_product_efficient_attention_7",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 833,
+        "node": "_scaled_dot_product_efficient_attention_7",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 2097152,
+        "alloc_index": 834,
+        "node": "_scaled_dot_product_efficient_attention_7",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 65536,
+        "alloc_index": 835,
+        "node": "_scaled_dot_product_efficient_attention_7",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 935,
+        "node": "_scaled_dot_product_efficient_attention_8",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 936,
+        "node": "_scaled_dot_product_efficient_attention_8",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 2097152,
+        "alloc_index": 937,
+        "node": "_scaled_dot_product_efficient_attention_8",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 65536,
+        "alloc_index": 938,
+        "node": "_scaled_dot_product_efficient_attention_8",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 1038,
+        "node": "_scaled_dot_product_efficient_attention_9",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 1039,
+        "node": "_scaled_dot_product_efficient_attention_9",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 2097152,
+        "alloc_index": 1040,
+        "node": "_scaled_dot_product_efficient_attention_9",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 65536,
+        "alloc_index": 1041,
+        "node": "_scaled_dot_product_efficient_attention_9",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 1141,
+        "node": "_scaled_dot_product_efficient_attention_10",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 1142,
+        "node": "_scaled_dot_product_efficient_attention_10",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 2097152,
+        "alloc_index": 1143,
+        "node": "_scaled_dot_product_efficient_attention_10",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 65536,
+        "alloc_index": 1144,
+        "node": "_scaled_dot_product_efficient_attention_10",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 1244,
+        "node": "_scaled_dot_product_efficient_attention_11",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 1245,
+        "node": "_scaled_dot_product_efficient_attention_11",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 2097152,
+        "alloc_index": 1246,
+        "node": "_scaled_dot_product_efficient_attention_11",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 65536,
+        "alloc_index": 1247,
+        "node": "_scaled_dot_product_efficient_attention_11",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 1347,
+        "node": "_scaled_dot_product_efficient_attention_12",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 1348,
+        "node": "_scaled_dot_product_efficient_attention_12",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 2097152,
+        "alloc_index": 1349,
+        "node": "_scaled_dot_product_efficient_attention_12",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 65536,
+        "alloc_index": 1350,
+        "node": "_scaled_dot_product_efficient_attention_12",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 1450,
+        "node": "_scaled_dot_product_efficient_attention_13",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 1451,
+        "node": "_scaled_dot_product_efficient_attention_13",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 2097152,
+        "alloc_index": 1452,
+        "node": "_scaled_dot_product_efficient_attention_13",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 65536,
+        "alloc_index": 1453,
+        "node": "_scaled_dot_product_efficient_attention_13",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 1553,
+        "node": "_scaled_dot_product_efficient_attention_14",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 1554,
+        "node": "_scaled_dot_product_efficient_attention_14",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 2097152,
+        "alloc_index": 1555,
+        "node": "_scaled_dot_product_efficient_attention_14",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 65536,
+        "alloc_index": 1556,
+        "node": "_scaled_dot_product_efficient_attention_14",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 1656,
+        "node": "_scaled_dot_product_efficient_attention_15",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 1657,
+        "node": "_scaled_dot_product_efficient_attention_15",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 2097152,
+        "alloc_index": 1658,
+        "node": "_scaled_dot_product_efficient_attention_15",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 65536,
+        "alloc_index": 1659,
+        "node": "_scaled_dot_product_efficient_attention_15",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 1759,
+        "node": "_scaled_dot_product_efficient_attention_16",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 1760,
+        "node": "_scaled_dot_product_efficient_attention_16",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 2097152,
+        "alloc_index": 1761,
+        "node": "_scaled_dot_product_efficient_attention_16",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 65536,
+        "alloc_index": 1762,
+        "node": "_scaled_dot_product_efficient_attention_16",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 1863,
+        "node": "_scaled_dot_product_efficient_attention_17",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 1864,
+        "node": "_scaled_dot_product_efficient_attention_17",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 2097152,
+        "alloc_index": 1865,
+        "node": "_scaled_dot_product_efficient_attention_17",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 65536,
+        "alloc_index": 1866,
+        "node": "_scaled_dot_product_efficient_attention_17",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 1966,
+        "node": "_scaled_dot_product_efficient_attention_18",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 1967,
+        "node": "_scaled_dot_product_efficient_attention_18",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 2097152,
+        "alloc_index": 1968,
+        "node": "_scaled_dot_product_efficient_attention_18",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 65536,
+        "alloc_index": 1969,
+        "node": "_scaled_dot_product_efficient_attention_18",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 2069,
+        "node": "_scaled_dot_product_efficient_attention_19",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 2070,
+        "node": "_scaled_dot_product_efficient_attention_19",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 2097152,
+        "alloc_index": 2071,
+        "node": "_scaled_dot_product_efficient_attention_19",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 65536,
+        "alloc_index": 2072,
+        "node": "_scaled_dot_product_efficient_attention_19",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 2172,
+        "node": "_scaled_dot_product_efficient_attention_20",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 2173,
+        "node": "_scaled_dot_product_efficient_attention_20",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 2097152,
+        "alloc_index": 2174,
+        "node": "_scaled_dot_product_efficient_attention_20",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 65536,
+        "alloc_index": 2175,
+        "node": "_scaled_dot_product_efficient_attention_20",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 2275,
+        "node": "_scaled_dot_product_efficient_attention_21",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 2276,
+        "node": "_scaled_dot_product_efficient_attention_21",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 2097152,
+        "alloc_index": 2277,
+        "node": "_scaled_dot_product_efficient_attention_21",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 65536,
+        "alloc_index": 2278,
+        "node": "_scaled_dot_product_efficient_attention_21",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 2378,
+        "node": "_scaled_dot_product_efficient_attention_22",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 2379,
+        "node": "_scaled_dot_product_efficient_attention_22",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 2097152,
+        "alloc_index": 2380,
+        "node": "_scaled_dot_product_efficient_attention_22",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 65536,
+        "alloc_index": 2381,
+        "node": "_scaled_dot_product_efficient_attention_22",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 2481,
+        "node": "_scaled_dot_product_efficient_attention_23",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 2482,
+        "node": "_scaled_dot_product_efficient_attention_23",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 2097152,
+        "alloc_index": 2483,
+        "node": "_scaled_dot_product_efficient_attention_23",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 65536,
+        "alloc_index": 2484,
+        "node": "_scaled_dot_product_efficient_attention_23",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 2584,
+        "node": "_scaled_dot_product_efficient_attention_24",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 2585,
+        "node": "_scaled_dot_product_efficient_attention_24",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 2097152,
+        "alloc_index": 2586,
+        "node": "_scaled_dot_product_efficient_attention_24",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 65536,
+        "alloc_index": 2587,
+        "node": "_scaled_dot_product_efficient_attention_24",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 2687,
+        "node": "_scaled_dot_product_efficient_attention_25",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 2688,
+        "node": "_scaled_dot_product_efficient_attention_25",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 2097152,
+        "alloc_index": 2689,
+        "node": "_scaled_dot_product_efficient_attention_25",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 65536,
+        "alloc_index": 2690,
+        "node": "_scaled_dot_product_efficient_attention_25",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 2790,
+        "node": "_scaled_dot_product_efficient_attention_26",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 2791,
+        "node": "_scaled_dot_product_efficient_attention_26",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 2097152,
+        "alloc_index": 2792,
+        "node": "_scaled_dot_product_efficient_attention_26",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 65536,
+        "alloc_index": 2793,
+        "node": "_scaled_dot_product_efficient_attention_26",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 2894,
+        "node": "_scaled_dot_product_efficient_attention_27",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 2895,
+        "node": "_scaled_dot_product_efficient_attention_27",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 2097152,
+        "alloc_index": 2896,
+        "node": "_scaled_dot_product_efficient_attention_27",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 65536,
+        "alloc_index": 2897,
+        "node": "_scaled_dot_product_efficient_attention_27",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 2997,
+        "node": "_scaled_dot_product_efficient_attention_28",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 2998,
+        "node": "_scaled_dot_product_efficient_attention_28",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 2097152,
+        "alloc_index": 2999,
+        "node": "_scaled_dot_product_efficient_attention_28",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 65536,
+        "alloc_index": 3000,
+        "node": "_scaled_dot_product_efficient_attention_28",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 3100,
+        "node": "_scaled_dot_product_efficient_attention_29",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 3101,
+        "node": "_scaled_dot_product_efficient_attention_29",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 2097152,
+        "alloc_index": 3102,
+        "node": "_scaled_dot_product_efficient_attention_29",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 65536,
+        "alloc_index": 3103,
+        "node": "_scaled_dot_product_efficient_attention_29",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 3203,
+        "node": "_scaled_dot_product_efficient_attention_30",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 3204,
+        "node": "_scaled_dot_product_efficient_attention_30",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 2097152,
+        "alloc_index": 3205,
+        "node": "_scaled_dot_product_efficient_attention_30",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 65536,
+        "alloc_index": 3206,
+        "node": "_scaled_dot_product_efficient_attention_30",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 3310,
+        "node": "_scaled_dot_product_efficient_attention_31",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 8,
+        "alloc_index": 3311,
+        "node": "_scaled_dot_product_efficient_attention_31",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 2097152,
+        "alloc_index": 3312,
+        "node": "_scaled_dot_product_efficient_attention_31",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 65536,
+        "alloc_index": 3313,
+        "node": "_scaled_dot_product_efficient_attention_31",
+        "op": "aten._scaled_dot_product_efficient_attention"
+      },
+      {
+        "phase": "forward",
+        "bytes": 4,
+        "alloc_index": 3382,
+        "node": "sum_1",
+        "op": "aten.sum"
+      },
+      {
+        "phase": "backward",
+        "bytes": 4,
+        "alloc_index": 3392,
+        "node": "?",
+        "op": "?"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3393,
+        "node": "mul_292",
+        "op": "aten.mul"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3394,
+        "node": "embedding",
+        "op": "aten.embedding"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3395,
+        "node": "add_6",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 3398,
+        "node": "silu",
+        "op": "aten.silu"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 3399,
+        "node": "mul_10",
+        "op": "aten.mul"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3401,
+        "node": "add_8",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3404,
+        "node": "add_12",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 8192,
+        "alloc_index": 3414,
+        "node": "rsqrt_3",
+        "op": "aten.rsqrt"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3417,
+        "node": "mul_17",
+        "op": "aten.mul"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3418,
+        "node": "mul_18",
+        "op": "aten.mul"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 3419,
+        "node": "mm_11",
+        "op": "aten.mm"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 3420,
+        "node": "silu_1",
+        "op": "aten.silu"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 3422,
+        "node": "mm_12",
+        "op": "aten.mm"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 3423,
+        "node": "mul_19",
+        "op": "aten.mul"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3425,
+        "node": "add_14",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3428,
+        "node": "add_18",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 8192,
+        "alloc_index": 3438,
+        "node": "rsqrt_5",
+        "op": "aten.rsqrt"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3441,
+        "node": "mul_26",
+        "op": "aten.mul"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3442,
+        "node": "mul_27",
+        "op": "aten.mul"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 3443,
+        "node": "mm_18",
+        "op": "aten.mm"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 3445,
+        "node": "silu_2",
+        "op": "aten.silu"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 3446,
+        "node": "mm_19",
+        "op": "aten.mm"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 3447,
+        "node": "mul_28",
+        "op": "aten.mul"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3449,
+        "node": "add_20",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3454,
+        "node": "add_24",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 8192,
+        "alloc_index": 3464,
+        "node": "rsqrt_7",
+        "op": "aten.rsqrt"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3467,
+        "node": "mul_35",
+        "op": "aten.mul"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3468,
+        "node": "mul_36",
+        "op": "aten.mul"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 3469,
+        "node": "mm_25",
+        "op": "aten.mm"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 3470,
+        "node": "silu_3",
+        "op": "aten.silu"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 3472,
+        "node": "mm_26",
+        "op": "aten.mm"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 3473,
+        "node": "mul_37",
+        "op": "aten.mul"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3475,
+        "node": "add_26",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3479,
+        "node": "add_30",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 8192,
+        "alloc_index": 3489,
+        "node": "rsqrt_9",
+        "op": "aten.rsqrt"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3492,
+        "node": "mul_44",
+        "op": "aten.mul"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3493,
+        "node": "mul_45",
+        "op": "aten.mul"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 3495,
+        "node": "mm_32",
+        "op": "aten.mm"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 3496,
+        "node": "silu_4",
+        "op": "aten.silu"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 3497,
+        "node": "mm_33",
+        "op": "aten.mm"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 3499,
+        "node": "mul_46",
+        "op": "aten.mul"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3501,
+        "node": "add_32",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3505,
+        "node": "add_36",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 8192,
+        "alloc_index": 3515,
+        "node": "rsqrt_11",
+        "op": "aten.rsqrt"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3518,
+        "node": "mul_53",
+        "op": "aten.mul"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3519,
+        "node": "mul_54",
+        "op": "aten.mul"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 3520,
+        "node": "mm_39",
+        "op": "aten.mm"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 3521,
+        "node": "silu_5",
+        "op": "aten.silu"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 3523,
+        "node": "mm_40",
+        "op": "aten.mm"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 3524,
+        "node": "mul_55",
+        "op": "aten.mul"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3526,
+        "node": "add_38",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3530,
+        "node": "add_42",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 8192,
+        "alloc_index": 3540,
+        "node": "rsqrt_13",
+        "op": "aten.rsqrt"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3543,
+        "node": "mul_62",
+        "op": "aten.mul"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3544,
+        "node": "mul_63",
+        "op": "aten.mul"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 3546,
+        "node": "mm_46",
+        "op": "aten.mm"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 3547,
+        "node": "silu_6",
+        "op": "aten.silu"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 3548,
+        "node": "mm_47",
+        "op": "aten.mm"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 3550,
+        "node": "mul_64",
+        "op": "aten.mul"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3552,
+        "node": "add_44",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3556,
+        "node": "add_48",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 8192,
+        "alloc_index": 3566,
+        "node": "rsqrt_15",
+        "op": "aten.rsqrt"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3569,
+        "node": "mul_71",
+        "op": "aten.mul"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3570,
+        "node": "mul_72",
+        "op": "aten.mul"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 3571,
+        "node": "mm_53",
+        "op": "aten.mm"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 3573,
+        "node": "silu_7",
+        "op": "aten.silu"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 3574,
+        "node": "mm_54",
+        "op": "aten.mm"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 3575,
+        "node": "mul_73",
+        "op": "aten.mul"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3577,
+        "node": "add_50",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3582,
+        "node": "add_54",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 8192,
+        "alloc_index": 3592,
+        "node": "rsqrt_17",
+        "op": "aten.rsqrt"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3595,
+        "node": "mul_80",
+        "op": "aten.mul"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3596,
+        "node": "mul_81",
+        "op": "aten.mul"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 3597,
+        "node": "mm_60",
+        "op": "aten.mm"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 3598,
+        "node": "silu_8",
+        "op": "aten.silu"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 3600,
+        "node": "mm_61",
+        "op": "aten.mm"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 3601,
+        "node": "mul_82",
+        "op": "aten.mul"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3603,
+        "node": "add_56",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3607,
+        "node": "add_60",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 8192,
+        "alloc_index": 3617,
+        "node": "rsqrt_19",
+        "op": "aten.rsqrt"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3620,
+        "node": "mul_89",
+        "op": "aten.mul"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3621,
+        "node": "mul_90",
+        "op": "aten.mul"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 3623,
+        "node": "mm_67",
+        "op": "aten.mm"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 3624,
+        "node": "silu_9",
+        "op": "aten.silu"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 3625,
+        "node": "mm_68",
+        "op": "aten.mm"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 3627,
+        "node": "mul_91",
+        "op": "aten.mul"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3629,
+        "node": "add_62",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3633,
+        "node": "add_66",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 8192,
+        "alloc_index": 3643,
+        "node": "rsqrt_21",
+        "op": "aten.rsqrt"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3646,
+        "node": "mul_98",
+        "op": "aten.mul"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3647,
+        "node": "mul_99",
+        "op": "aten.mul"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 3648,
+        "node": "mm_74",
+        "op": "aten.mm"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 3649,
+        "node": "silu_10",
+        "op": "aten.silu"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 3651,
+        "node": "mm_75",
+        "op": "aten.mm"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 3652,
+        "node": "mul_100",
+        "op": "aten.mul"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3654,
+        "node": "add_68",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3658,
+        "node": "add_72",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 8192,
+        "alloc_index": 3668,
+        "node": "rsqrt_23",
+        "op": "aten.rsqrt"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3671,
+        "node": "mul_107",
+        "op": "aten.mul"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3672,
+        "node": "mul_108",
+        "op": "aten.mul"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 3674,
+        "node": "mm_81",
+        "op": "aten.mm"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 3675,
+        "node": "silu_11",
+        "op": "aten.silu"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 3676,
+        "node": "mm_82",
+        "op": "aten.mm"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 3678,
+        "node": "mul_109",
+        "op": "aten.mul"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3680,
+        "node": "add_74",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3684,
+        "node": "add_78",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 8192,
+        "alloc_index": 3694,
+        "node": "rsqrt_25",
+        "op": "aten.rsqrt"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3697,
+        "node": "mul_116",
+        "op": "aten.mul"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3698,
+        "node": "mul_117",
+        "op": "aten.mul"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 3699,
+        "node": "mm_88",
+        "op": "aten.mm"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 3701,
+        "node": "silu_12",
+        "op": "aten.silu"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 3702,
+        "node": "mm_89",
+        "op": "aten.mm"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 3703,
+        "node": "mul_118",
+        "op": "aten.mul"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3705,
+        "node": "add_80",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3710,
+        "node": "add_84",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 8192,
+        "alloc_index": 3720,
+        "node": "rsqrt_27",
+        "op": "aten.rsqrt"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3723,
+        "node": "mul_125",
+        "op": "aten.mul"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3724,
+        "node": "mul_126",
+        "op": "aten.mul"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 3725,
+        "node": "mm_95",
+        "op": "aten.mm"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 3726,
+        "node": "silu_13",
+        "op": "aten.silu"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 3728,
+        "node": "mm_96",
+        "op": "aten.mm"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 3729,
+        "node": "mul_127",
+        "op": "aten.mul"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3731,
+        "node": "add_86",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3735,
+        "node": "add_90",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 8192,
+        "alloc_index": 3745,
+        "node": "rsqrt_29",
+        "op": "aten.rsqrt"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3748,
+        "node": "mul_134",
+        "op": "aten.mul"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3749,
+        "node": "mul_135",
+        "op": "aten.mul"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 3751,
+        "node": "mm_102",
+        "op": "aten.mm"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 3752,
+        "node": "silu_14",
+        "op": "aten.silu"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 3753,
+        "node": "mm_103",
+        "op": "aten.mm"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 3755,
+        "node": "mul_136",
+        "op": "aten.mul"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3757,
+        "node": "add_92",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3761,
+        "node": "add_96",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 8192,
+        "alloc_index": 3771,
+        "node": "rsqrt_31",
+        "op": "aten.rsqrt"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3774,
+        "node": "mul_143",
+        "op": "aten.mul"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3775,
+        "node": "mul_144",
+        "op": "aten.mul"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 3776,
+        "node": "mm_109",
+        "op": "aten.mm"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 3777,
+        "node": "silu_15",
+        "op": "aten.silu"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 3779,
+        "node": "mm_110",
+        "op": "aten.mm"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 3780,
+        "node": "mul_145",
+        "op": "aten.mul"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3782,
+        "node": "add_98",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3786,
+        "node": "add_102",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 8192,
+        "alloc_index": 3796,
+        "node": "rsqrt_33",
+        "op": "aten.rsqrt"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3799,
+        "node": "mul_152",
+        "op": "aten.mul"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3800,
+        "node": "mul_153",
+        "op": "aten.mul"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 3802,
+        "node": "mm_116",
+        "op": "aten.mm"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 3803,
+        "node": "silu_16",
+        "op": "aten.silu"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 3804,
+        "node": "mm_117",
+        "op": "aten.mm"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 3806,
+        "node": "mul_154",
+        "op": "aten.mul"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3808,
+        "node": "add_104",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3812,
+        "node": "add_108",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 8192,
+        "alloc_index": 3822,
+        "node": "rsqrt_35",
+        "op": "aten.rsqrt"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3825,
+        "node": "mul_161",
+        "op": "aten.mul"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3826,
+        "node": "mul_162",
+        "op": "aten.mul"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 3827,
+        "node": "mm_123",
+        "op": "aten.mm"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 3829,
+        "node": "silu_17",
+        "op": "aten.silu"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 3830,
+        "node": "mm_124",
+        "op": "aten.mm"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 3831,
+        "node": "mul_163",
+        "op": "aten.mul"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3833,
+        "node": "add_110",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3838,
+        "node": "add_114",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 8192,
+        "alloc_index": 3848,
+        "node": "rsqrt_37",
+        "op": "aten.rsqrt"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3851,
+        "node": "mul_170",
+        "op": "aten.mul"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3852,
+        "node": "mul_171",
+        "op": "aten.mul"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 3853,
+        "node": "mm_130",
+        "op": "aten.mm"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 3854,
+        "node": "silu_18",
+        "op": "aten.silu"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 3856,
+        "node": "mm_131",
+        "op": "aten.mm"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 3857,
+        "node": "mul_172",
+        "op": "aten.mul"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3859,
+        "node": "add_116",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3863,
+        "node": "add_120",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 8192,
+        "alloc_index": 3873,
+        "node": "rsqrt_39",
+        "op": "aten.rsqrt"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3876,
+        "node": "mul_179",
+        "op": "aten.mul"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3877,
+        "node": "mul_180",
+        "op": "aten.mul"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 3879,
+        "node": "mm_137",
+        "op": "aten.mm"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 3880,
+        "node": "silu_19",
+        "op": "aten.silu"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 3881,
+        "node": "mm_138",
+        "op": "aten.mm"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 3883,
+        "node": "mul_181",
+        "op": "aten.mul"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3885,
+        "node": "add_122",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3889,
+        "node": "add_126",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 8192,
+        "alloc_index": 3899,
+        "node": "rsqrt_41",
+        "op": "aten.rsqrt"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3902,
+        "node": "mul_188",
+        "op": "aten.mul"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3903,
+        "node": "mul_189",
+        "op": "aten.mul"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 3904,
+        "node": "mm_144",
+        "op": "aten.mm"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 3905,
+        "node": "silu_20",
+        "op": "aten.silu"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 3907,
+        "node": "mm_145",
+        "op": "aten.mm"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 3908,
+        "node": "mul_190",
+        "op": "aten.mul"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3910,
+        "node": "add_128",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3914,
+        "node": "add_132",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 8192,
+        "alloc_index": 3924,
+        "node": "rsqrt_43",
+        "op": "aten.rsqrt"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3927,
+        "node": "mul_197",
+        "op": "aten.mul"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3928,
+        "node": "mul_198",
+        "op": "aten.mul"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 3930,
+        "node": "mm_151",
+        "op": "aten.mm"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 3931,
+        "node": "silu_21",
+        "op": "aten.silu"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 3932,
+        "node": "mm_152",
+        "op": "aten.mm"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 3934,
+        "node": "mul_199",
+        "op": "aten.mul"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3936,
+        "node": "add_134",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3940,
+        "node": "add_138",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 8192,
+        "alloc_index": 3950,
+        "node": "rsqrt_45",
+        "op": "aten.rsqrt"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3953,
+        "node": "mul_206",
+        "op": "aten.mul"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3954,
+        "node": "mul_207",
+        "op": "aten.mul"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 3955,
+        "node": "mm_158",
+        "op": "aten.mm"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 3957,
+        "node": "silu_22",
+        "op": "aten.silu"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 3958,
+        "node": "mm_159",
+        "op": "aten.mm"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 3959,
+        "node": "mul_208",
+        "op": "aten.mul"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3961,
+        "node": "add_140",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3966,
+        "node": "add_144",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 8192,
+        "alloc_index": 3976,
+        "node": "rsqrt_47",
+        "op": "aten.rsqrt"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3979,
+        "node": "mul_215",
+        "op": "aten.mul"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3980,
+        "node": "mul_216",
+        "op": "aten.mul"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 3981,
+        "node": "mm_165",
+        "op": "aten.mm"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 3982,
+        "node": "silu_23",
+        "op": "aten.silu"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 3984,
+        "node": "mm_166",
+        "op": "aten.mm"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 3985,
+        "node": "mul_217",
+        "op": "aten.mul"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3987,
+        "node": "add_146",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 3991,
+        "node": "add_150",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 8192,
+        "alloc_index": 4001,
+        "node": "rsqrt_49",
+        "op": "aten.rsqrt"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 4004,
+        "node": "mul_224",
+        "op": "aten.mul"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 4005,
+        "node": "mul_225",
+        "op": "aten.mul"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 4007,
+        "node": "mm_172",
+        "op": "aten.mm"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 4008,
+        "node": "silu_24",
+        "op": "aten.silu"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 4009,
+        "node": "mm_173",
+        "op": "aten.mm"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 4011,
+        "node": "mul_226",
+        "op": "aten.mul"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 4013,
+        "node": "add_152",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 4017,
+        "node": "add_156",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 8192,
+        "alloc_index": 4027,
+        "node": "rsqrt_51",
+        "op": "aten.rsqrt"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 4030,
+        "node": "mul_233",
+        "op": "aten.mul"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 4031,
+        "node": "mul_234",
+        "op": "aten.mul"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 4032,
+        "node": "mm_179",
+        "op": "aten.mm"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 4033,
+        "node": "silu_25",
+        "op": "aten.silu"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 4035,
+        "node": "mm_180",
+        "op": "aten.mm"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 4036,
+        "node": "mul_235",
+        "op": "aten.mul"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 4038,
+        "node": "add_158",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 4042,
+        "node": "add_162",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 8192,
+        "alloc_index": 4052,
+        "node": "rsqrt_53",
+        "op": "aten.rsqrt"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 4055,
+        "node": "mul_242",
+        "op": "aten.mul"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 4056,
+        "node": "mul_243",
+        "op": "aten.mul"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 4058,
+        "node": "mm_186",
+        "op": "aten.mm"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 4059,
+        "node": "silu_26",
+        "op": "aten.silu"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 4060,
+        "node": "mm_187",
+        "op": "aten.mm"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 4062,
+        "node": "mul_244",
+        "op": "aten.mul"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 4064,
+        "node": "add_164",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 4068,
+        "node": "add_168",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 8192,
+        "alloc_index": 4078,
+        "node": "rsqrt_55",
+        "op": "aten.rsqrt"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 4081,
+        "node": "mul_251",
+        "op": "aten.mul"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 4082,
+        "node": "mul_252",
+        "op": "aten.mul"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 4083,
+        "node": "mm_193",
+        "op": "aten.mm"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 4085,
+        "node": "silu_27",
+        "op": "aten.silu"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 4086,
+        "node": "mm_194",
+        "op": "aten.mm"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 4087,
+        "node": "mul_253",
+        "op": "aten.mul"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 4089,
+        "node": "add_170",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 4094,
+        "node": "add_174",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 8192,
+        "alloc_index": 4104,
+        "node": "rsqrt_57",
+        "op": "aten.rsqrt"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 4107,
+        "node": "mul_260",
+        "op": "aten.mul"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 4108,
+        "node": "mul_261",
+        "op": "aten.mul"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 4109,
+        "node": "mm_200",
+        "op": "aten.mm"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 4110,
+        "node": "silu_28",
+        "op": "aten.silu"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 4112,
+        "node": "mm_201",
+        "op": "aten.mm"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 4113,
+        "node": "mul_262",
+        "op": "aten.mul"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 4115,
+        "node": "add_176",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 4119,
+        "node": "add_180",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 8192,
+        "alloc_index": 4129,
+        "node": "rsqrt_59",
+        "op": "aten.rsqrt"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 4132,
+        "node": "mul_269",
+        "op": "aten.mul"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 4133,
+        "node": "mul_270",
+        "op": "aten.mul"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 4135,
+        "node": "mm_207",
+        "op": "aten.mm"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 4136,
+        "node": "silu_29",
+        "op": "aten.silu"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 4137,
+        "node": "mm_208",
+        "op": "aten.mm"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 4139,
+        "node": "mul_271",
+        "op": "aten.mul"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 4141,
+        "node": "add_182",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 4145,
+        "node": "add_186",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 8192,
+        "alloc_index": 4155,
+        "node": "rsqrt_61",
+        "op": "aten.rsqrt"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 4158,
+        "node": "mul_278",
+        "op": "aten.mul"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 4159,
+        "node": "mul_279",
+        "op": "aten.mul"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 4160,
+        "node": "mm_214",
+        "op": "aten.mm"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 4161,
+        "node": "silu_30",
+        "op": "aten.silu"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 4163,
+        "node": "mm_215",
+        "op": "aten.mm"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 4164,
+        "node": "mul_280",
+        "op": "aten.mul"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 4166,
+        "node": "add_188",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 4170,
+        "node": "add_192",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 8192,
+        "alloc_index": 4180,
+        "node": "rsqrt_63",
+        "op": "aten.rsqrt"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 4183,
+        "node": "mul_287",
+        "op": "aten.mul"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 4184,
+        "node": "mul_288",
+        "op": "aten.mul"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 4186,
+        "node": "mm_221",
+        "op": "aten.mm"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 4187,
+        "node": "silu_31",
+        "op": "aten.silu"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 4188,
+        "node": "mm_222",
+        "op": "aten.mm"
+      },
+      {
+        "phase": "backward",
+        "bytes": 5636096,
+        "alloc_index": 4190,
+        "node": "mul_289",
+        "op": "aten.mul"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 4192,
+        "node": "add_194",
+        "op": "aten.add"
+      },
+      {
+        "phase": "backward",
+        "bytes": 8192,
+        "alloc_index": 4202,
+        "node": "rsqrt_64",
+        "op": "aten.rsqrt"
+      },
+      {
+        "phase": "backward",
+        "bytes": 2097152,
+        "alloc_index": 4206,
+        "node": "mul_293",
+        "op": "aten.mul"
+      },
+      {
+        "phase": "backward",
+        "bytes": 1024,
+        "alloc_index": 4209,
+        "node": "sum_2",
+        "op": "aten.sum"
+      },
+      {
+        "phase": "backward",
+        "bytes": 4194304,
+        "alloc_index": 4210,
+        "node": "sum_2",
+        "op": "aten.sum"
+      },
+      {
+        "phase": "backward",
+        "bytes": 8,
+        "alloc_index": 4211,
+        "node": "sum_2",
+        "op": "aten.sum"
+      }
+    ],
+    "top_allocations": [
+      {
+        "bytes": 5636096,
+        "phase": "forward",
+        "alloc_index": 163,
+        "graph_file": "<eval_with_key>.3",
+        "line": 409,
+        "source": "mm_5 = torch.ops.aten.mm.default(view_11, t_5);  view_11 = t_5 = None"
+      },
+      {
+        "bytes": 5636096,
+        "phase": "forward",
+        "alloc_index": 160,
+        "graph_file": "<eval_with_key>.3",
+        "line": 405,
+        "source": "mm_4 = torch.ops.aten.mm.default(view_11, t_4);  t_4 = None"
+      },
+      {
+        "bytes": 5636096,
+        "phase": "backward",
+        "alloc_index": 4190,
+        "graph_file": "<eval_with_key>.5",
+        "line": 1277,
+        "source": "mul_289 = torch.ops.aten.mul.Tensor(silu_31, _unsafe_view_222)"
+      },
+      {
+        "bytes": 5636096,
+        "phase": "backward",
+        "alloc_index": 4188,
+        "graph_file": "<eval_with_key>.5",
+        "line": 1275,
+        "source": "mm_222 = torch.ops.aten.mm.default(view_352, t_222)"
+      },
+      {
+        "bytes": 5636096,
+        "phase": "backward",
+        "alloc_index": 4187,
+        "graph_file": "<eval_with_key>.5",
+        "line": 1273,
+        "source": "silu_31 = torch.ops.aten.silu.default(_unsafe_view_221)"
+      },
+      {
+        "bytes": 5636096,
+        "phase": "backward",
+        "alloc_index": 4186,
+        "graph_file": "<eval_with_key>.5",
+        "line": 1271,
+        "source": "mm_221 = torch.ops.aten.mm.default(view_352, t_221)"
+      },
+      {
+        "bytes": 5636096,
+        "phase": "backward",
+        "alloc_index": 4164,
+        "graph_file": "<eval_with_key>.5",
+        "line": 1250,
+        "source": "mul_280 = torch.ops.aten.mul.Tensor(silu_30, _unsafe_view_215)"
+      },
+      {
+        "bytes": 5636096,
+        "phase": "backward",
+        "alloc_index": 4163,
+        "graph_file": "<eval_with_key>.5",
+        "line": 1248,
+        "source": "mm_215 = torch.ops.aten.mm.default(view_341, t_215)"
+      },
+      {
+        "bytes": 5636096,
+        "phase": "backward",
+        "alloc_index": 4161,
+        "graph_file": "<eval_with_key>.5",
+        "line": 1246,
+        "source": "silu_30 = torch.ops.aten.silu.default(_unsafe_view_214)"
+      },
+      {
+        "bytes": 5636096,
+        "phase": "backward",
+        "alloc_index": 4160,
+        "graph_file": "<eval_with_key>.5",
+        "line": 1244,
+        "source": "mm_214 = torch.ops.aten.mm.default(view_341, t_214)"
+      },
+      {
+        "bytes": 5636096,
+        "phase": "backward",
+        "alloc_index": 4139,
+        "graph_file": "<eval_with_key>.5",
+        "line": 1223,
+        "source": "mul_271 = torch.ops.aten.mul.Tensor(silu_29, _unsafe_view_208)"
+      },
+      {
+        "bytes": 5636096,
+        "phase": "backward",
+        "alloc_index": 4137,
+        "graph_file": "<eval_with_key>.5",
+        "line": 1221,
+        "source": "mm_208 = torch.ops.aten.mm.default(view_330, t_208)"
+      },
+      {
+        "bytes": 5636096,
+        "phase": "backward",
+        "alloc_index": 4136,
+        "graph_file": "<eval_with_key>.5",
+        "line": 1219,
+        "source": "silu_29 = torch.ops.aten.silu.default(_unsafe_view_207)"
+      },
+      {
+        "bytes": 5636096,
+        "phase": "backward",
+        "alloc_index": 4135,
+        "graph_file": "<eval_with_key>.5",
+        "line": 1217,
+        "source": "mm_207 = torch.ops.aten.mm.default(view_330, t_207)"
+      },
+      {
+        "bytes": 5636096,
+        "phase": "backward",
+        "alloc_index": 4113,
+        "graph_file": "<eval_with_key>.5",
+        "line": 1196,
+        "source": "mul_262 = torch.ops.aten.mul.Tensor(silu_28, _unsafe_view_201)"
+      },
+      {
+        "bytes": 5636096,
+        "phase": "backward",
+        "alloc_index": 4112,
+        "graph_file": "<eval_with_key>.5",
+        "line": 1194,
+        "source": "mm_201 = torch.ops.aten.mm.default(view_319, t_201)"
+      },
+      {
+        "bytes": 5636096,
+        "phase": "backward",
+        "alloc_index": 4110,
+        "graph_file": "<eval_with_key>.5",
+        "line": 1192,
+        "source": "silu_28 = torch.ops.aten.silu.default(_unsafe_view_200)"
+      },
+      {
+        "bytes": 5636096,
+        "phase": "backward",
+        "alloc_index": 4109,
+        "graph_file": "<eval_with_key>.5",
+        "line": 1190,
+        "source": "mm_200 = torch.ops.aten.mm.default(view_319, t_200)"
+      },
+      {
+        "bytes": 5636096,
+        "phase": "backward",
+        "alloc_index": 4087,
+        "graph_file": "<eval_with_key>.5",
+        "line": 1169,
+        "source": "mul_253 = torch.ops.aten.mul.Tensor(silu_27, _unsafe_view_194)"
+      },
+      {
+        "bytes": 5636096,
+        "phase": "backward",
+        "alloc_index": 4086,
+        "graph_file": "<eval_with_key>.5",
+        "line": 1167,
+        "source": "mm_194 = torch.ops.aten.mm.default(view_308, t_194)"
+      },
+      {
+        "bytes": 5636096,
+        "phase": "backward",
+        "alloc_index": 4085,
+        "graph_file": "<eval_with_key>.5",
+        "line": 1165,
+        "source": "silu_27 = torch.ops.aten.silu.default(_unsafe_view_193)"
+      },
+      {
+        "bytes": 5636096,
+        "phase": "backward",
+        "alloc_index": 4083,
+        "graph_file": "<eval_with_key>.5",
+        "line": 1163,
+        "source": "mm_193 = torch.ops.aten.mm.default(view_308, t_193)"
+      },
+      {
+        "bytes": 5636096,
+        "phase": "backward",
+        "alloc_index": 4062,
+        "graph_file": "<eval_with_key>.5",
+        "line": 1142,
+        "source": "mul_244 = torch.ops.aten.mul.Tensor(silu_26, _unsafe_view_187)"
+      },
+      {
+        "bytes": 5636096,
+        "phase": "backward",
+        "alloc_index": 4060,
+        "graph_file": "<eval_with_key>.5",
+        "line": 1140,
+        "source": "mm_187 = torch.ops.aten.mm.default(view_297, t_187)"
+      },
+      {
+        "bytes": 5636096,
+        "phase": "backward",
+        "alloc_index": 4059,
+        "graph_file": "<eval_with_key>.5",
+        "line": 1138,
+        "source": "silu_26 = torch.ops.aten.silu.default(_unsafe_view_186)"
+      }
+    ],
+    "budget": 0.15,
+    "model": "llama",
+    "scale": 8,
+    "backend": "aot_eager",
+    "resident_before": 221613056,
+    "torch_version": "2.14.0+cu130",
+    "trace_overflowed": false,
+    "reorder_pass": true,
+    "intervention": "recompute-mlp-out",
+    "solver": {
+      "calls": 1,
+      "n_items": 324,
+      "n_mlp_outputs": 32,
+      "mlp_saved_by_solver": 32,
+      "mlp_saved_after": 0,
+      "max_memory": 0.15,
+      "solver_saved_weight": 0.14933356693179317,
+      "final_saved_weight": 0.09134451896109962
+    },
+    "measured_requested": 1084556816,
+    "replay_vs_requested_err": 0
+  }
+]

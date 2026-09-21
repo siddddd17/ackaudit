@@ -33,7 +33,10 @@ from typing import Any
 
 import torch
 from torch._functorch import config as functorch_config
+from torch._functorch._activation_checkpointing.knapsack import dp_knapsack
+from torch._functorch.partitioners import CustomKnapsackSolver
 
+from ackaudit.audit import RuntimeRecorder
 from ackaudit.capture import _resolve
 
 MAX_ENTRIES = 2_000_000
@@ -175,6 +178,75 @@ def analyze(trace: list[dict], boundary: int, measured: int) -> dict[str, Any]:
 
 
 # --------------------------------------------------------------------------
+# intervention: edit the solver's plan
+# --------------------------------------------------------------------------
+
+_VIEW_OPS = {"view", "_unsafe_view", "reshape", "expand", "clone", "t", "transpose", "permute"}
+
+
+def _aten_op(node: Any) -> str | None:
+    """'mm' for a node whose target is torch.ops.aten.mm.default, else None."""
+    parts = str(getattr(node, "target", "")).split(".")
+    return parts[1] if len(parts) >= 2 and parts[0] == "aten" else None
+
+
+def is_mlp_output(node: Any) -> bool:
+    """A down_proj output: an mm whose input, through view-like ops, is mul(silu(...), ...)."""
+    if _aten_op(node) != "mm" or not node.args:
+        return False
+    x = node.args[0]
+    while x is not None and _aten_op(x) in _VIEW_OPS:
+        x = x.args[0] if getattr(x, "args", None) else None
+    if x is None or _aten_op(x) != "mul":
+        return False
+    return any(_aten_op(a) == "silu" for a in x.args if hasattr(a, "target"))
+
+
+def apply_intervention(
+    mode: str, saved: list[int], recomputed: list[int], mlp: set[int]
+) -> tuple[list[int], list[int]]:
+    """'none' leaves the plan alone; the other two move the MLP outputs across."""
+    if mode == "none":
+        return list(saved), list(recomputed)
+    if mode == "save-mlp-out":
+        return sorted(set(saved) | mlp), sorted(set(recomputed) - mlp)
+    if mode == "recompute-mlp-out":
+        return sorted(set(saved) - mlp), sorted(set(recomputed) | mlp)
+    raise ValueError(f"unknown intervention {mode!r}")
+
+
+class InterventionSolver(CustomKnapsackSolver):
+    """Runs the production dp_knapsack with the partitioner's own runtimes, then edits its plan."""
+
+    def __init__(self, recorder: RuntimeRecorder, mode: str, record: dict) -> None:
+        self.recorder = recorder
+        self.mode = mode
+        self.record = record
+
+    def __call__(self, memory, joint_graph, max_memory, node_info, all_recomputable_banned_nodes):
+        runtimes = self.recorder.lookup(all_recomputable_banned_nodes)
+        _value, saved, recomputed = dp_knapsack(memory, runtimes, max_memory)
+        mlp = {i for i, n in enumerate(all_recomputable_banned_nodes) if is_mlp_output(n)}
+        if self.mode != "none" and not mlp:
+            raise ValueError("intervention requested but no MLP outputs found among knapsack items")
+        new_saved, new_recomputed = apply_intervention(self.mode, saved, recomputed, mlp)
+        self.record.update(
+            calls=self.record.get("calls", 0) + 1,
+            n_items=len(memory),
+            n_mlp_outputs=len(mlp),
+            mlp_saved_by_solver=len(mlp & set(saved)),
+            mlp_saved_after=len(mlp & set(new_saved)),
+            max_memory=max_memory,
+            solver_saved_weight=sum(memory[i] for i in saved),
+            final_saved_weight=sum(memory[i] for i in new_saved),
+        )
+        return new_saved, new_recomputed
+
+    def uuid(self) -> Any:
+        return None
+
+
+# --------------------------------------------------------------------------
 # measurement
 # --------------------------------------------------------------------------
 
@@ -197,7 +269,12 @@ def _stop_recording() -> None:
 
 
 def measure(
-    model_name: str, scale: int, budget: float, backend: str, reorder: bool = True
+    model_name: str,
+    scale: int,
+    budget: float,
+    backend: str,
+    reorder: bool = True,
+    intervention: str | None = None,
 ) -> tuple[dict, dict]:
     # min_cut_rematerialization_partition looks this up by module-level name at
     # call time, so replacing the attribute disables the pass for this compile.
@@ -217,8 +294,24 @@ def measure(
     args = tuple(a.cuda() for a in make_inputs())
     compiled = torch.compile(model, backend=backend, dynamic=False)
 
-    # warmup: compiles forward, and backward lazily; fixes the plan
-    compiled(*args).backward()
+    # Without --intervention no hook is installed and the default solver runs.
+    # With it, InterventionSolver runs the same dp_knapsack and edits the plan;
+    # "none" installs the hook without editing, as a control.
+    solver_record: dict[str, Any] = {}
+    prev_solver = functorch_config.activation_memory_budget_solver
+    recorder = RuntimeRecorder()
+    try:
+        # warmup: compiles forward, and backward lazily; fixes the plan
+        if intervention is not None:
+            functorch_config.activation_memory_budget_solver = InterventionSolver(
+                recorder, intervention, solver_record
+            )
+            with recorder:
+                compiled(*args).backward()
+        else:
+            compiled(*args).backward()
+    finally:
+        functorch_config.activation_memory_budget_solver = prev_solver
     torch.cuda.synchronize()
     model.zero_grad(set_to_none=False)
     torch.cuda.synchronize()
@@ -249,6 +342,8 @@ def measure(
         torch_version=torch.__version__,
         trace_overflowed=len(trace) >= MAX_ENTRIES,
         reorder_pass=reorder,
+        intervention=intervention,
+        solver=solver_record,
         measured_requested=(
             req_peak - req_resident if req_peak is not None and req_resident is not None else None
         ),
@@ -281,6 +376,7 @@ def report(r: dict) -> str:
         f"  measured delta          {mb(r['measured_delta']):9.1f} MB",
         f"  replayed peak           {mb(r['peak_bytes']):9.1f} MB   ({r['free_action_used']})",
         f"  reorder pass            {'on' if r.get('reorder_pass', True) else 'OFF (ablation)'}",
+        f"  solver hook             {r.get('intervention') or 'not installed (default solver)'}",
     ]
     for act, v in r["replay"].items():
         out.append(f"    via {act:<16} {mb(v['peak']):9.1f} MB   off by {v['err']} bytes")
@@ -299,6 +395,19 @@ def report(r: dict) -> str:
         f"  peak at trace index {r['peak_index']} of {r['trace_len']}; "
         f"backward starts at {r['boundary_index']}; peak in backward: {r['peak_in_backward']}"
     )
+    sv = r.get("solver") or {}
+    if sv:
+        f4 = lambda x: "n/a" if x is None else f"{x:.4f}"
+        out.append(
+            f"    MLP outputs among knapsack items: {sv.get('n_mlp_outputs')}; "
+            f"saved by solver {sv.get('mlp_saved_by_solver')}, after intervention {sv.get('mlp_saved_after')}"
+        )
+        out.append(
+            f"    saved weight: solver {f4(sv.get('solver_saved_weight'))}, "
+            f"after intervention {f4(sv.get('final_saved_weight'))}, budget {f4(sv.get('max_memory'))}"
+        )
+        if sv.get("calls", 0) != 1:
+            out.append(f"    WARNING: solver called {sv.get('calls', 0)} times; expected 1")
     t = r["timing"]
     out.append(f"  peak is {100 * t['peak_position_in_backward']:.1f}% of the way through the backward")
     lp = t["live_backward_alloc_position"]
@@ -333,6 +442,11 @@ def main() -> None:
         "--no-reorder", action="store_true",
         help="ablation: replace reordering_to_mimic_autograd_engine with the identity",
     )
+    ap.add_argument(
+        "--intervention", choices=["none", "save-mlp-out", "recompute-mlp-out"], default=None,
+        help="install a solver hook that runs dp_knapsack then edits its plan; "
+        "'none' installs the hook without editing, as a control",
+    )
     ap.add_argument("--outdir", default="results/memory_snapshot")
     ap.add_argument(
         "--pickle-dir", default="/tmp/ackaudit_snapshots",
@@ -350,15 +464,18 @@ def main() -> None:
 
     results = []
     for b in args.budgets:
-        r, snap = measure(args.model, args.scale, b, args.backend, reorder=not args.no_reorder)
+        r, snap = measure(
+            args.model, args.scale, b, args.backend,
+            reorder=not args.no_reorder, intervention=args.intervention,
+        )
         results.append(r)
-        stem = f"{args.model}_scale{args.scale}_{args.backend}" + ("_noreorder" if args.no_reorder else "") + f"_b{b:.2f}"
+        stem = f"{args.model}_scale{args.scale}_{args.backend}" + ("_noreorder" if args.no_reorder else "") + (f"_int-{args.intervention}" if args.intervention else "") + f"_b{b:.2f}"
         with open(pdir / f"{stem}.pickle", "wb") as fh:
             pickle.dump(snap, fh)
         print(report(r))
         print()
 
-    stem = f"{args.model}_scale{args.scale}_{args.backend}" + ("_noreorder" if args.no_reorder else "")
+    stem = f"{args.model}_scale{args.scale}_{args.backend}" + ("_noreorder" if args.no_reorder else "") + (f"_int-{args.intervention}" if args.intervention else "")
     (outdir / f"{stem}.json").write_text(json.dumps(results, indent=2))
     (outdir / f"{stem}_report.txt").write_text("\n\n".join(report(r) for r in results) + "\n")
     srcdir = outdir / f"{stem}_graphs"
