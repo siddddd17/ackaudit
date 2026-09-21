@@ -1,0 +1,93 @@
+budget 0.05  llama scale 8  aot_eager  torch 2.14.0+cu130
+  measured delta             1427.4 MB
+  replayed peak              1414.3 MB   (free_requested)
+  reorder pass            OFF (ablation)
+    via free_requested      1414.3 MB   off by 13140976 bytes
+    via free_completed      1414.3 MB   off by 13140976 bytes
+  requested-bytes delta      1414.3 MB   replay off by 0 bytes   <- the exact check
+  (max_memory_allocated counts rounded blocks, the trace records requested sizes,
+   so the replay is compared against requested bytes)
+  peak at trace index 5864 of 14583; backward starts at 3465; peak in backward: True
+  peak is 21.6% of the way through the backward
+  live backward tensors were allocated between 0.0% and 21.6% of the backward (median 11.5%)
+  live at peak: 620 allocations
+    allocated in forward        56.2 MB  (105 allocations)
+    allocated in backward     1358.0 MB  (515 allocations)
+  largest groups (phase, op):
+    backward  aten.mul                             453.2 MB  x164
+    backward  aten.mm                              427.8 MB  x96
+    backward  aten.add                             268.4 MB  x128
+    backward  aten.silu                            180.4 MB  x32
+    forward   aten._scaled_dot_product_efficient_attention      56.2 MB  x104
+    backward  aten._scaled_dot_product_efficient_attention      13.0 MB  x24
+    backward  aten.where                             8.4 MB  x1
+    backward  aten.sum                               4.2 MB  x3
+    backward  aten.embedding                         2.1 MB  x1
+    backward  aten.rsqrt                             0.5 MB  x65
+    forward   aten.sum                               0.0 MB  x1
+    backward  ?                                      0.0 MB  x1
+  distinct live backward nodes, by op:
+    aten.mul             164  mul, mul_1, mul_10, mul_100, mul_101, mul_102, mul_107, mul_108, ... (164 total)
+    aten.add             128  add_10, add_100, add_101, add_102, add_104, add_106, add_107, add_108, ... (128 total)
+    aten.mm               96  mm_100, mm_102, mm_103, mm_107, mm_109, mm_11, mm_110, mm_114, ... (96 total)
+    aten.rsqrt            65  rsqrt, rsqrt_1, rsqrt_10, rsqrt_11, rsqrt_12, rsqrt_13, rsqrt_14, rsqrt_15, ... (65 total)
+    aten.silu             32  silu, silu_1, silu_10, silu_11, silu_12, silu_13, silu_14, silu_15, ... (32 total)
+    aten._scaled_dot_product_efficient_attention   6  _scaled_dot_product_efficient_attention_26, _scaled_dot_product_efficient_attention_27, _scaled_dot_product_efficient_attention_28, _scaled_dot_product_efficient_attention_29, _scaled_dot_product_efficient_attention_30, _scaled_dot_product_efficient_attention_31
+  largest single allocations:
+         8.4 MB  backward  where = torch.ops.aten.where.self(expand_1, scalar_tensor_1, scalar_tensor);  expand_1 = s
+         5.6 MB  backward  mul_289 = torch.ops.aten.mul.Tensor(silu_31, _unsafe_view_222)
+         5.6 MB  backward  mm_222 = torch.ops.aten.mm.default(view_352, t_222)
+         5.6 MB  backward  silu_31 = torch.ops.aten.silu.default(_unsafe_view_221)
+         5.6 MB  backward  mm_221 = torch.ops.aten.mm.default(view_352, t_221)
+         5.6 MB  backward  mul_280 = torch.ops.aten.mul.Tensor(silu_30, _unsafe_view_215)
+         5.6 MB  backward  mm_215 = torch.ops.aten.mm.default(view_341, t_215)
+         5.6 MB  backward  silu_30 = torch.ops.aten.silu.default(_unsafe_view_214)
+         5.6 MB  backward  mm_214 = torch.ops.aten.mm.default(view_341, t_214)
+         5.6 MB  backward  mul_271 = torch.ops.aten.mul.Tensor(silu_29, _unsafe_view_208)
+
+budget 0.15  llama scale 8  aot_eager  torch 2.14.0+cu130
+  measured delta             1433.8 MB
+  replayed peak              1414.3 MB   (free_requested)
+  reorder pass            OFF (ablation)
+    via free_requested      1414.3 MB   off by 19563504 bytes
+    via free_completed      1414.3 MB   off by 19563504 bytes
+  requested-bytes delta      1414.3 MB   replay off by 0 bytes   <- the exact check
+  (max_memory_allocated counts rounded blocks, the trace records requested sizes,
+   so the replay is compared against requested bytes)
+  peak at trace index 5564 of 14283; backward starts at 3330; peak in backward: True
+  peak is 20.4% of the way through the backward
+  live backward tensors were allocated between 0.0% and 20.4% of the backward (median 10.4%)
+  live at peak: 620 allocations
+    allocated in forward        99.4 MB  (140 allocations)
+    allocated in backward     1314.9 MB  (480 allocations)
+  largest groups (phase, op):
+    backward  aten.mul                             453.2 MB  x164
+    backward  aten.mm                              410.3 MB  x91
+    backward  aten.add                             255.9 MB  x122
+    backward  aten.silu                            180.4 MB  x32
+    forward   aten._scaled_dot_product_efficient_attention      69.2 MB  x128
+    forward   aten.mm                               17.6 MB  x5
+    forward   aten.add                              12.6 MB  x6
+    backward  aten.where                             8.4 MB  x1
+    backward  aten.sum                               4.2 MB  x3
+    backward  aten.embedding                         2.1 MB  x1
+    backward  aten.rsqrt                             0.5 MB  x65
+    forward   aten.sum                               0.0 MB  x1
+  distinct live backward nodes, by op:
+    aten.mul             164  mul, mul_1, mul_10, mul_100, mul_101, mul_102, mul_107, mul_108, ... (164 total)
+    aten.add             122  add_100, add_101, add_102, add_104, add_106, add_107, add_108, add_110, ... (122 total)
+    aten.mm               91  mm_100, mm_102, mm_103, mm_107, mm_109, mm_11, mm_110, mm_114, ... (91 total)
+    aten.rsqrt            65  rsqrt, rsqrt_1, rsqrt_10, rsqrt_11, rsqrt_12, rsqrt_13, rsqrt_14, rsqrt_15, ... (65 total)
+    aten.silu             32  silu, silu_1, silu_10, silu_11, silu_12, silu_13, silu_14, silu_15, ... (32 total)
+    ?                      1  ?
+  largest single allocations:
+         8.4 MB  backward  where = torch.ops.aten.where.self(expand_1, scalar_tensor_1, scalar_tensor);  expand_1 = s
+         5.6 MB  forward   mm_5 = torch.ops.aten.mm.default(view_11, t_5);  view_11 = t_5 = None
+         5.6 MB  forward   mm_4 = torch.ops.aten.mm.default(view_11, t_4);  t_4 = None
+         5.6 MB  backward  mul_289 = torch.ops.aten.mul.Tensor(silu_31, _unsafe_view_222)
+         5.6 MB  backward  mm_222 = torch.ops.aten.mm.default(view_352, t_222)
+         5.6 MB  backward  silu_31 = torch.ops.aten.silu.default(_unsafe_view_221)
+         5.6 MB  backward  mm_221 = torch.ops.aten.mm.default(view_352, t_221)
+         5.6 MB  backward  mul_280 = torch.ops.aten.mul.Tensor(silu_30, _unsafe_view_215)
+         5.6 MB  backward  mm_215 = torch.ops.aten.mm.default(view_341, t_215)
+         5.6 MB  backward  silu_30 = torch.ops.aten.silu.default(_unsafe_view_214)
