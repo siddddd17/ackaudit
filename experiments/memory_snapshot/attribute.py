@@ -1,5 +1,4 @@
-"""Every number in the #197838 follow-up, recomputed from committed data.
-
+"""
 Reads the snapshot JSON and the dumped FX graphs under results/memory_snapshot/
 and the harness sweep under results/measured_backward/. Needs no GPU and does
 not import torch: graphs are read with Python's ast module.
@@ -308,6 +307,35 @@ def main() -> None:
     print(f"  identical saved weight and runtime across placements: "
           f"{len({(r['solver']['saved_weight'], r['solver']['runtime_saved']) for r in place}) == 1}")
     print(f"  peak spread: {100 * (max(pk.values()) / min(pk.values()) - 1):.1f}%")
+
+    print("\n== measured step time for the within-budget plans ==")
+    sweep_peaks = {r["k"]: r["peak_bytes"] for r in sweep}
+    for backend in ("aot_eager", "inductor"):
+        path = RES / f"step_time_sweep_b0.05_{backend}.json"
+        if not path.exists():
+            print(f"  {backend}: {path.name} not committed")
+            continue
+        t = json.loads(path.read_text())
+        rows = {r["k"]: r for r in t["summary"]}
+        base = rows[0]
+        print(f"  {backend} ({t['device']}, torch {t['torch_version']}, {t['rounds']} rounds x {t['iters']} steps):")
+        for k, r in sorted(rows.items()):
+            print(f"    k={k:<3} peak {mb(r['peak_bytes'])}, {100 * (1 - r['peak_bytes'] / base['peak_bytes']):.1f}% below k=0; "
+                  f"saved weight {r['saved_weight']:.4f} within budget: {r['within_budget']}; "
+                  f"step {r['step_ms_median']:.1f} ms ({r['step_time_vs_first_pct']:+.1f}%), "
+                  f"per round {[round(x, 1) for x in r['step_ms_per_round']]}; "
+                  f"peak identical across rounds: {r['peak_identical_across_rounds']}")
+        k24 = rows.get(24)
+        if k24:
+            print(f"    k=24 removes {mb(base['peak_bytes'] - k24['peak_bytes'])} of peak")
+        if backend == "aot_eager":
+            print(f"    every peak identical to the committed saved-count sweep: "
+                  f"{all(rows[k]['peak_bytes'] == sweep_peaks.get(k) for k in rows)}")
+        else:
+            h = json.loads(Path("results/measured_backward/inductor/llama_scale8_inductor.json").read_text())
+            c = next(c for c in h if abs(c["budget"] - 0.05) < 1e-9)
+            hp = statistics.median(c["measured_peaks"]) - c["resident_before"]
+            print(f"    natural plan (k=0) identical to the inductor harness run in the issue: {base['peak_bytes'] == hp}")
 
 
 if __name__ == "__main__":

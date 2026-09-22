@@ -30,9 +30,61 @@ from torch._functorch import config as functorch_config
 
 from ackaudit.audit import RuntimeRecorder
 from ackaudit.capture import _resolve
+import experiments.memory_snapshot.sweep_mlp_saved as sweep_mod
 from experiments.memory_snapshot.sweep_mlp_saved import FeasibleMLPSweepSolver
 
 RES = Path("results/memory_snapshot")
+
+
+def _is_silu_like(a: Any) -> bool:
+    """aten.silu, or one of its decompositions: x / (1 + exp(-x)) as inductor
+    lowers it, or x * sigmoid(x) as the core decomposition does."""
+    op = sweep_mod._aten_op(a)
+    if op == "silu":
+        return True
+    args = [x for x in getattr(a, "args", ()) if hasattr(x, "target")]
+    if op == "div" and len(getattr(a, "args", ())) == 2:
+        x, den = a.args
+        for e in (d for d in getattr(den, "args", ()) if sweep_mod._aten_op(d) == "exp"):
+            neg = e.args[0] if e.args else None
+            if sweep_mod._aten_op(neg) == "neg" and neg.args and neg.args[0] is x:
+                return True
+    if op == "mul" and len(args) == 2:
+        x, y = args
+        for sig, other in ((y, x), (x, y)):
+            if sweep_mod._aten_op(sig) == "sigmoid" and sig.args and sig.args[0] is other:
+                return True
+    return False
+
+
+def is_mlp_output_any(node: Any) -> bool:
+    """A down_proj output: mm whose input, through view-like ops, is a mul with a
+    SiLU (or decomposed SiLU) operand."""
+    if sweep_mod._aten_op(node) != "mm" or not getattr(node, "args", None):
+        return False
+    x = sweep_mod._strip_views(node.args[0])
+    if x is None or sweep_mod._aten_op(x) != "mul":
+        return False
+    return any(_is_silu_like(a) for a in x.args if hasattr(a, "target"))
+
+
+class GraphOrderSolver(FeasibleMLPSweepSolver):
+    """The committed sweep solver, unchanged, except that MLP outputs are
+    recognised through SiLU decompositions and numbered by position in the
+    joint graph rather than by the name of their silu node. Inductor decomposes
+    aten.silu before partitioning, so under inductor there is no silu node."""
+
+    def __call__(self, memory, joint_graph, max_memory, node_info, all_recomputable_banned_nodes):
+        position = {n: i for i, n in enumerate(joint_graph.nodes)}
+        mlp = sorted((n for n in all_recomputable_banned_nodes if is_mlp_output_any(n)),
+                     key=position.__getitem__)
+        layer = {n: i for i, n in enumerate(mlp)}
+        original = sweep_mod._mlp_layer_from_output
+        sweep_mod._mlp_layer_from_output = layer.get
+        try:
+            return super().__call__(memory, joint_graph, max_memory, node_info, all_recomputable_banned_nodes)
+        finally:
+            sweep_mod._mlp_layer_from_output = original
 
 
 def committed_peaks(budget: float) -> dict[int, int]:
@@ -61,7 +113,10 @@ def time_plan(
     recorder = RuntimeRecorder()
     prev_solver = functorch_config.activation_memory_budget_solver
     try:
-        functorch_config.activation_memory_budget_solver = FeasibleMLPSweepSolver(recorder, k=k, record=record)
+        # aot_eager keeps the committed solver exactly; other backends need the
+        # decomposition-aware matcher.
+        solver_cls = FeasibleMLPSweepSolver if backend == "aot_eager" else GraphOrderSolver
+        functorch_config.activation_memory_budget_solver = solver_cls(recorder, k=k, record=record)
         with recorder:
             compiled(*args).backward()  # compiles and fixes the plan
     finally:
