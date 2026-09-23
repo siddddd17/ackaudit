@@ -19,11 +19,13 @@ consumer has run, so the memory required lies between the largest single member
 sum of all members (the upper bound, and what PyTorch's own backward simulator
 assumes). Both are reported.
 
-CPU only. Nothing is executed on an accelerator; the model is traced and
-partitioned, the solver hook records the plan, and the closures are computed
-from the candidate graph.
+Runs on the device given by --device (default cpu). The candidate node set can
+differ between devices; for llama scale 8 it is 324 on cuda and 292 on cpu, so
+pass the device used for the measurement being explained. With --device cuda
+the model's forward and backward run on the GPU; the closures themselves are
+computed from the candidate graph.
 
-    python -m experiments.recompute_closure.run_closure --model llama
+    python -m experiments.recompute_closure.run_closure --model llama --device cuda
     python -m experiments.recompute_closure.run_closure --model bert --budgets 0.05 0.15 0.30
 """
 
