@@ -27,6 +27,7 @@ import statistics
 from pathlib import Path
 
 RES = Path("results/memory_snapshot")
+CLOSURE = Path("results/recompute_closure")
 HARNESS = Path("results/measured_backward/fine/llama_scale8.json")
 BATCH, SEQ, INTERMEDIATE, LAYERS = 2, 1024, 688, 32
 INNER = BATCH * SEQ * INTERMEDIATE * 4
@@ -336,6 +337,23 @@ def main() -> None:
             c = next(c for c in h if abs(c["budget"] - 0.05) < 1e-9)
             hp = statistics.median(c["measured_peaks"]) - c["resident_before"]
             print(f"    natural plan (k=0) identical to the inductor harness run in the issue: {base['peak_bytes'] == hp}")
+
+    print("\n== unsaved-predecessor closure per plan, from experiments/recompute_closure/run_closure.py ==")
+    print("  For each recomputed node, the unsaved activations that have to be materialised to")
+    print("  produce it. A dependency closure, not a live set: the allocator trace above is what")
+    print("  shows how much of it is actually resident at the peak.")
+    for model in ("llama", "bert"):
+        path = CLOSURE / f"{model}_scale8_cuda.json"
+        if not path.exists():
+            print(f"  {model}: {path.name} not committed")
+            continue
+        cells = sorted(json.loads(path.read_text()), key=lambda c: c["budget"])
+        print(f"  {model} (cuda, torch {cells[0]['torch_version']}, {cells[0]['n_items']} candidate nodes):")
+        for c in cells:
+            sizes = c["sizes"]
+            print(f"    budget {c['budget']:.2f}  saved {c['n_saved']:>3}  recomputed {c['n_recomputed']:>3}  "
+                  f"largest closure {max(sizes):>2} nodes  median {statistics.median(sizes):.1f}  "
+                  f"largest single member {max(c['maxima']):.4f}  sum over the closure {max(c['weights']):.4f}")
 
 
 if __name__ == "__main__":
